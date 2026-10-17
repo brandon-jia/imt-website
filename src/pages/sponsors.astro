@@ -3,10 +3,10 @@ import Layout from '../layouts/Layout.astro';
 
 const sponsors = [
   { name: 'Art of Problem Solving', logo: '/aops-logo.svg', url: 'https://artofproblemsolving.com/' },
-  { name: 'AwesomeMath', logo: '/AWESOMEMATH.png', url: 'https://awesomemath.org/' },
+  { name: 'AwesomeMath', logo: '/awesomemath.webp', url: 'https://awesomemath.org/' },
   { name: 'Hudson River Trading', logo: '/hrt-logo.svg', url: 'https://www.hudsonrivertrading.com/' },
-  { name: 'Jane Street', logo: '/JANESTREET.png', url: 'https://www.janestreet.com/' },
-  { name: 'Non-Trivial', logo: '/nontrivial.png', url: 'https://www.non-trivial.org/' },
+  { name: 'Jane Street', logo: '/janestreet.webp', url: 'https://www.janestreet.com/' },
+  { name: 'Non-Trivial', logo: '/nontrivial.webp', url: 'https://www.non-trivial.org/' },
 ];
 ---
 
@@ -28,7 +28,7 @@ const sponsors = [
       <div class="sponsor-wall">
         {sponsors.map(sponsor => (
           <a href={sponsor.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${sponsor.name}`}>
-            <img src={sponsor.logo} alt={sponsor.name} loading="lazy" />
+            <img src={sponsor.logo} alt={sponsor.name} loading="lazy" decoding="async" width="300" height="132" />
           </a>
         ))}
       </div>
@@ -58,7 +58,7 @@ const sponsors = [
   .sponsor-wall { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: stretch; border-block: 1px solid var(--line); }
   .sponsor-wall a { display: flex; min-width: 0; height: 150px; align-items: center; justify-content: center; border-right: 1px solid var(--line); padding: 1.5rem; }
   .sponsor-wall a:first-child { border-left: 1px solid var(--line); }
-  .sponsor-wall img { max-width: 150px; max-height: 66px; object-fit: contain; }
+  .sponsor-wall img { max-width: 150px; max-height: 66px; width: 100%; height: 66px; object-fit: contain; }
 
   .sponsor-contact { display: flex; align-items: center; justify-content: space-between; gap: 3rem; margin-top: 3rem; border-top: 1px solid var(--line); padding-top: 2rem; }
   .sponsor-contact p { max-width: 600px; margin: 0.55rem 0 0; color: var(--muted); font-size: 0.86rem; line-height: 1.6; }

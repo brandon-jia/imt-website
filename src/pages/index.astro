@@ -44,7 +44,7 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <main class="home-main">
+  <div class="home-main">
     <div class="site-container home-columns">
       <div class="home-primary">
         <section class="home-section" aria-labelledby="about-heading">
@@ -99,7 +99,7 @@ import Layout from '../layouts/Layout.astro';
         </a>
       </aside>
     </div>
-  </main>
+  </div>
 
   <section class="record" aria-labelledby="record-heading">
     <div class="site-container record-layout">
@@ -121,7 +121,7 @@ import Layout from '../layouts/Layout.astro';
   .home-intro { border-bottom: 1px solid var(--line); background: var(--paper); }
   .intro-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.55fr); gap: clamp(3rem, 8vw, 7rem); align-items: end; padding-block: clamp(4.5rem, 8vw, 7rem); }
   .home-kicker { margin: 0 0 1rem; color: var(--green); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; }
-  .home-intro h1 { max-width: 780px; margin: 0; color: var(--ink); font-size: clamp(2.8rem, 5.8vw, 5rem); font-weight: 750; letter-spacing: -0.045em; line-height: 1.02; }
+  .home-intro h1 { max-width: 780px; margin: 0; color: var(--ink); font-size: clamp(2.8rem, 5.8vw, 5rem); font-family: var(--font-serif); font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; }
   .home-summary { max-width: 640px; margin: 1.5rem 0 0; color: var(--muted); font-size: clamp(1.05rem, 1.7vw, 1.22rem); line-height: 1.65; }
   .home-actions { display: flex; align-items: center; gap: 1.25rem; margin-top: 2rem; }
   .plain-link { color: var(--green); font-size: 0.87rem; font-weight: 700; text-decoration-thickness: 1px; }

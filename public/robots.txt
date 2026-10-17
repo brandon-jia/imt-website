@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /test-portal
+Disallow: /account
+Disallow: /portal
+Disallow: /learn/diagnostic/session/
+Disallow: /learn/diagnostic/report/
 
-Sitemap: https://integratedmathtournament.org/sitemap-index.xml
+Sitemap: https://www.integratedmath.org/sitemap.xml

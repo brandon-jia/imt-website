@@ -1,0 +1,116 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { randomUUID } from 'node:crypto';
+import { PGlite } from '@electric-sql/pglite';
+import { finalCodeDigest, normalizeFinalInteger, mutateLiveFinal, readLiveFinal } from '../src/lib/liveFinal.ts';
+import { parsePendingFinalSubmission, discardRejectedFinalSubmission } from '../src/lib/liveFinalSubmission.ts';
+
+test('uncertain final submissions keep their original retry ID across reconnects and reject corrupt saved requests',()=>{
+  const pending={action:'submit',question:3,answer:'-0042',request_id:randomUUID()};
+  assert.deepEqual(parsePendingFinalSubmission(JSON.stringify(pending)),pending);
+  for(const code of ['AUTH_REQUIRED','INVALID_SESSION','FINAL_ACCOUNT_CHANGED','RATE_LIMITED','FINAL_REQUEST_FAILED','NETWORK_ERROR'])assert.equal(discardRejectedFinalSubmission(code),false);
+  for(const code of ['FINAL_QUESTION_CLOSED','FINAL_ALREADY_SOLVED','FINAL_INVALID_INTEGER'])assert.equal(discardRejectedFinalSubmission(code),true);
+  for(const value of [null,'{bad',JSON.stringify({...pending,question:11}),JSON.stringify({...pending,request_id:'invalid'}),JSON.stringify({...pending,answer:'1e2'}),JSON.stringify({...pending,action:'join'})])assert.equal(parsePendingFinalSubmission(value),null);
+});
+
+test('live final: access, 10 synchronized questions, atomic scoring, penalties, privacy, retries and admin controls', async () => {
+  const db = new PGlite();
+  try {
+    await db.exec(`CREATE ROLE anon; CREATE ROLE authenticated; CREATE ROLE service_role;
+      CREATE SCHEMA auth; CREATE TABLE auth.users(id uuid PRIMARY KEY);
+      CREATE TABLE public.test_admins(user_id uuid PRIMARY KEY REFERENCES auth.users(id));`);
+    await db.exec(await readFile(new URL('../supabase/migrations/20261016000100_fall_live_final.sql',import.meta.url),'utf8'));
+    const admin=randomUUID(), users=Array.from({length:7},()=>randomUUID()), code=finalCodeDigest('FINAL-DEMO-2026');
+    for (const id of [admin,...users]) await db.query('INSERT INTO auth.users VALUES($1)',[id]);
+    await db.query('INSERT INTO test_admins VALUES($1)',[admin]);
+    const call = async (name,args) => (await db.query(`SELECT ${name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) AS result`,args)).rows[0].result;
+    let state;
+    const control=async(action,question=null,prompt=null,answer=null,hash=null,version=state?.round.version??null)=>state=await call('control_live_final',[admin,action,version,question,prompt,answer,hash]);
+    assert.equal((await call('get_live_final_state',[users[0]])).available,false);
+    await assert.rejects(call('control_live_final',[users[0],'initialize']),/FINAL_ADMIN_REQUIRED/);
+    await control('initialize'); assert.equal(state.questions.length,10);
+    await assert.rejects(control('open_lobby'),/FINAL_NOT_READY/);
+    await control('set_code',null,null,null,code);
+    for(let n=1;n<=10;n++)await control('save_question',n,`Question ${n}: find the integer.`,n===1?'+00042':String(n));
+    assert.equal(state.questions[0].answer,'42');
+    await control('open_lobby');
+    await assert.rejects(call('join_live_final',[users[0],'bad','A','a@example.invalid']),/FINAL_ACCESS_CODE/);
+    const locked=await call('get_live_final_state',[users[0]]);assert.equal(locked.joined,false);assert.equal(locked.question,undefined);
+    for(let n=0;n<users.length-1;n++)await call('join_live_final',[users[n],code,'Participant '+n,n+'@example.invalid']);
+    await control('open_next');
+    assert.equal(state.round.current_question,1);
+    assert.equal(Date.parse(state.questions[0].closes_at)-Date.parse(state.questions[0].opened_at),480000);
+    const stale=state.round.version;
+    await assert.rejects(control('open_next'),/FINAL_STILL_OPEN/);
+    await assert.rejects(control('save_question',1,'Changed','99'),/FINAL_QUESTIONS_LOCKED/);
+    await control('save_question',2,'Updated future question: find the integer.','2');
+    assert.equal(state.questions[1].prompt,'Updated future question: find the integer.');
+    const rotated=finalCodeDigest('FINAL-REPLACEMENT-2026');
+    await control('set_code',null,null,null,rotated);
+    assert.equal((await call('get_live_final_state',[users[0]])).joined,true);
+    await assert.rejects(call('join_live_final',[users[6],code,'Participant 6','6@example.invalid']),/FINAL_ACCESS_CODE/);
+    await call('join_live_final',[users[6],rotated,'Participant 6','6@example.invalid']);
+    const firstQuestion=await call('get_live_final_state',[users[6]]);
+    assert.equal(firstQuestion.question.prompt,'Question 1: find the integer.');
+    assert.equal(firstQuestion.questions,undefined);
+    const submit=(user,answer,question=1,id=randomUUID())=>call('submit_live_final',[user,question,answer,id]);
+    const request=randomUUID();
+    await submit(users[0],'41',1,request);await submit(users[0],'41',1,request);
+    await assert.rejects(submit(users[0],'40',1,request),/FINAL_REQUEST_CONFLICT/);
+    await assert.rejects(submit(users[0],'42.0'),/FINAL_INVALID_INTEGER/);
+    const first=await submit(users[0],'+0042');assert.equal(first.result.points,8);
+    await assert.rejects(submit(users[0],'42'),/FINAL_ALREADY_SOLVED/);
+    const results=await Promise.all(users.slice(1,5).map(user=>submit(user,'42')));
+    assert.deepEqual(results.map(r=>r.result.points),[8,6,4,4]);
+    for(let n=0;n<7;n++)await submit(users[5],String(n));
+    assert.equal((await submit(users[5],'42')).result.points,0);
+    await submit(users[6],'-1');
+    const participant=await call('get_live_final_state',[users[6]]);
+    assert.equal(participant.question.solved_count,6);assert.equal(participant.own.question_points,0);
+    assert.equal(participant.participants,undefined);assert.equal(participant.question.answer,undefined);assert.equal(participant.round.access_code_hash,undefined);
+    await control('end_question');
+    await assert.rejects(submit(users[6],'42'),/FINAL_QUESTION_CLOSED/);
+    assert.equal((await submit(users[0],'41',1,request)).result.correct,false); // uncertain-response retries remain idempotent after close
+    await assert.rejects(control('open_next',null,null,null,null,stale),/FINAL_STALE_CONTROL/);
+    await control('open_next');
+    await assert.rejects(control('save_question',2,'Changed after opening','99'),/FINAL_QUESTIONS_LOCKED/);
+    await assert.rejects(submit(users[6],'42',1),/FINAL_QUESTION_CLOSED/);
+    await submit(users[6],'2',2);
+    assert.equal((await call('get_live_final_state',[users[6]])).own.question_points,10);
+    await db.exec("UPDATE live_final_questions SET closes_at=clock_timestamp()-interval '1 second' WHERE number=2");
+    await assert.rejects(submit(users[0],'2',2),/FINAL_QUESTION_CLOSED/);
+    assert.equal((await call('get_live_final_state',[users[0]])).question.prompt,'');
+    for(let n=3;n<=10;n++){await control('open_next');await submit(users[0],String(n),n);await control('end_question');}
+    await control('finish');assert.equal(state.round.status,'finished');
+    await assert.rejects(control('open_next'),/FINAL_NO_NEXT/);
+    const report=await call('get_live_final_admin_state',[admin]);
+    assert.equal(report.participants.length,7);assert.equal(report.participants.find(p=>p.user_id===users[0]).total_points,88);
+    assert.equal(report.participants.find(p=>p.user_id===users[6]).scores.find(s=>s.question_number===1).points,0);
+    assert.equal(report.round.access_code_hash,undefined);
+    assert.equal(report.participants.find(p=>p.user_id===users[0]).scores[0].incorrect_count,1);
+    await assert.rejects(call('get_live_final_admin_state',[users[0]]),/FINAL_ADMIN_REQUIRED/);
+    await db.exec('SET ROLE authenticated');
+    await assert.rejects(db.query('SELECT answer FROM live_final_questions'),/permission denied/);
+    await assert.rejects(call('get_live_final_admin_state',[admin]),/permission denied/);
+    await db.exec('RESET ROLE');
+  } finally { await db.close(); }
+});
+
+test('final protocol validates exact integers and never accepts a client-supplied score or admin identity', async()=>{
+  assert.equal(normalizeFinalInteger('-000'), '0');assert.equal(normalizeFinalInteger('+00042'),'42');
+  assert.equal(normalizeFinalInteger('9'.repeat(100)),'9'.repeat(100));
+  for(const value of ['42.0','1e3','2/1','',42,'9'.repeat(101)])assert.throws(()=>normalizeFinalInteger(value));
+  const calls=[];const db={rpc:async(name,args)=>{calls.push({name,args});return {data:{ok:true},error:null};}};
+  const user={id:randomUUID(),isAdmin:false};
+  await assert.rejects(readLiveFinal(db,user,true),/Administrator/);
+  await assert.rejects(mutateLiveFinal(db,user,{action:'initialize',isAdmin:true},true),/Administrator/);
+  await mutateLiveFinal(db,user,{action:'submit',question:1,answer:'+0042',request_id:randomUUID(),points:1000,user_id:randomUUID()});
+  assert.equal(calls.length,1);assert.equal(calls[0].args.p_user_id,user.id);assert.equal(calls[0].args.p_answer,'42');assert.equal(calls[0].args.points,undefined);
+  const organizer={...user,isAdmin:true};
+  await assert.rejects(mutateLiveFinal(db,organizer,{action:'set_code',version:0,code:'short'},true),/12–64/);
+  const generated=await mutateLiveFinal(db,organizer,{action:'set_code',version:0,generate:true},true);
+  assert.match(generated.access_code,/^[A-Za-z0-9_-]{16}$/);
+  assert.equal(calls[1].args.p_code_hash,finalCodeDigest(generated.access_code));
+  assert.equal(calls[1].args.code,undefined);
+});

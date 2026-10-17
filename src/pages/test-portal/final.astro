@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FinalDemoToolbar from '../../components/FinalDemoToolbar.astro';
+---
+<Layout title="Fall 2026 Final Round" description="The individual live final of the Fall 2026 Integrated Mathematics Tournament.">
+  <FinalDemoToolbar />
+  <div class="site-container final-page">
+    <header class="final-heading"><div><h1 class="page-title">Fall 2026 final</h1></div><a class="text-link" href="/test-portal">Back to portal</a></header>
+    <details class="final-rules"><summary>Rules</summary><p>You compete individually. Each of the 10 questions has an eight-minute time limit. An organizer opens each question, and everyone answers it at the same time.</p><p>The first correct submission earns 10 base points, the second 8, the third 6, and all later correct submissions 4. Each wrong submission deducts 2 points from that question’s award. Scores cannot fall below 0, and an unsolved question earns 0.</p><p>You may try again after a wrong answer while the question is open. After a correct answer, no further submissions are allowed for that question. Invalid integer input is not submitted and carries no penalty.</p></details>
+    <p id="final-status" class="final-message" role="status" aria-live="polite">Connecting to the final round…</p>
+    <div id="final-signin" hidden><p>Sign in with your individual portal account, then return here with the shared finalist access code.</p><a class="button-primary" href="/test-portal">Sign in to the portal</a></div>
+    <form id="final-join" class="final-join" hidden>
+      <h2>Enter the final round</h2><label for="final-code">Finalist access code</label><input class="form-control" id="final-code" name="code" type="password" maxlength="64" required autocomplete="off" spellcheck="false" aria-describedby="code-help" />
+      <p id="code-help" class="privacy-note">Use the shared code sent by the organizers. Codes are case-sensitive.</p><button class="button-primary" type="submit">Enter final</button>
+    </form>
+    <section id="final-workspace" hidden aria-label="Current final question">
+      <div class="final-stats"><div><span>Question</span><strong id="final-question-number">Waiting</strong></div><div><span>Time remaining</span><strong id="final-timer" aria-label="Time remaining">0:00</strong></div><div><span>Already solved</span><strong id="final-solvers">0</strong></div><div><span>Your question points</span><strong id="final-question-points">0</strong></div><div><span>Your total points</span><strong id="final-total-points">0</strong></div></div>
+      <p id="final-phase" class="final-phase" role="status" aria-live="polite"></p>
+      <div id="final-problem" class="final-problem portal-math"></div>
+      <aside id="final-pending" class="final-message" hidden><p>A submission is awaiting confirmation. Recover it before sending another answer; it will not be counted twice.</p><button type="button" id="final-retry" class="button-secondary">Check last submission</button></aside>
+      <form id="final-answer-form" class="final-answer-form" hidden>
+        <label for="final-answer">Integer answer</label><div><input class="form-control" id="final-answer" type="text" inputmode="text" maxlength="102" required autocomplete="off" spellcheck="false" aria-describedby="answer-help" /><button class="button-primary" type="submit" id="final-submit">Submit answer</button></div>
+        <p id="answer-help" class="privacy-note">Use digits with an optional + or - sign. Every accepted incorrect submission costs 2 points.</p>
+      </form>
+      <div id="final-feedback" class="final-feedback" role="status" aria-live="polite" aria-atomic="true" hidden><strong id="final-feedback-title"></strong><p id="final-feedback-message"></p></div>
+    </section>
+  </div>
+</Layout>
+<style>
+  .final-page { max-width:1060px; padding-block:2.5rem 5rem; }
+  .final-heading { display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; margin-bottom:2rem; }
+  .final-heading .page-title { font-size:clamp(2.2rem,5vw,3.5rem); } .final-heading .lede { margin-top:.8rem; }
+  .final-rules { border-block:1px solid var(--line); padding-block:1rem; margin-bottom:1.5rem; font-size:.9rem; line-height:1.75; }
+  summary { cursor:pointer; font-weight:700; } .final-message { padding:.9rem 1rem; background:white; border:1px solid var(--line); line-height:1.6; }
+  .final-message:empty { display:none; } [hidden] { display:none !important; }
+  .final-join { max-width:480px; margin-top:2rem; } .final-join label,.final-answer-form label { display:block; font-weight:700; margin-bottom:.6rem; }
+  .final-join h2 { margin-bottom:1rem; } .final-stats { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); border-block:1px solid var(--line); margin-top:2rem; }
+  .final-stats > div { padding:1rem .75rem; } .final-stats span { display:block; font-size:.75rem; color:var(--muted); line-height:1.5; } .final-stats strong { display:block; font-size:1.8rem; margin-top:.4rem; font-variant-numeric:tabular-nums; }
+  .final-phase { margin-block:1.5rem; font-weight:700; } .final-problem { background:white; padding:clamp(1.25rem,4vw,2.5rem); border:1px solid var(--line); white-space:pre-wrap; font-size:1.1rem; line-height:1.8; }
+  .final-problem:empty { display:none; } .final-answer-form { max-width:650px; margin-top:2rem; } .final-answer-form > div { display:flex; gap:.75rem; } .final-answer-form input { flex:1; }
+  .final-feedback { margin-top:1.25rem; padding:1rem 1.25rem; border:1px solid #b8c2bb; border-left-width:5px; background:white; color:var(--ink); line-height:1.6; }
+  .final-feedback strong { display:block; font-size:1.2rem; font-weight:750; } .final-feedback p { margin:.25rem 0 0; }
+  .final-feedback[data-result="correct"] { border-color:#277144; background:#eaf6ee; color:#14532d; }
+  .final-feedback[data-result="incorrect"] { border-color:#b42318; background:#fff0ee; color:#8a1c13; }
+  @media(max-width:620px) { .final-stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .final-stats > div { border-bottom:1px solid var(--line); } .final-answer-form > div { flex-direction:column; } }
+</style>
+<script>
+  import { finalRequest, finalAccountKey, finalClock, setupFinalDemoToolbar } from '../../lib/liveFinalClient';
+  import { renderPortalMath, PortalClientError } from '../../lib/testPortalClient';
+  import type { ParticipantFinalState, FinalSubmission } from '../../lib/liveFinalTypes';
+  import { parsePendingFinalSubmission, discardRejectedFinalSubmission, type PendingFinalSubmission } from '../../lib/liveFinalSubmission';
+  setupFinalDemoToolbar();
+  const element = (id:string) => document.getElementById(id)!;
+  const status=element('final-status'), join=element('final-join') as HTMLFormElement, form=element('final-answer-form') as HTMLFormElement, input=element('final-answer') as HTMLInputElement;
+  let state:ParticipantFinalState | undefined, offset=0, lastSync=0, lastStamp=0, busy=false, storageKey='', loadedQuestion=0, actionError='';
+  let pending:PendingFinalSubmission | null=null, refreshing=false, lastFeedbackKey='';
+  function feedback(title:string,message:string,result:'correct'|'incorrect'|'notice'='notice') {
+    const panel=element('final-feedback'),key=JSON.stringify([title,message,result]);if(key===lastFeedbackKey)return;lastFeedbackKey=key;
+    element('final-feedback-title').textContent=title;element('final-feedback-message').textContent=message;panel.dataset.result=result;panel.hidden=!title&&!message;
+  }
+  function answerFeedback(correct:boolean,points:number,number:number,open:boolean) {
+    feedback(correct?'Correct answer':'Incorrect answer',correct?`You earned ${points} ${points===1?'point':'points'} for question ${number}.`:`${open?'Try again while this question is open.':'This question is closed.'} This submission adds a 2-point deduction to this question’s award.`,correct?'correct':'incorrect');
+  }
+  function remember() { try { if(pending)sessionStorage.setItem(storageKey,JSON.stringify(pending));else sessionStorage.removeItem(storageKey); } catch {} element('final-pending').hidden=!pending; }
+  function render(next:ParticipantFinalState) {
+    const stamp=Date.parse(next.server_now); if(stamp<lastStamp)return;if(next.question?.number&&next.question.number!==state?.question?.number)actionError='';lastStamp=stamp;state=next;offset=stamp-Date.now();lastSync=Date.now();
+    element('final-workspace').hidden=!next.joined;
+    join.hidden=next.joined||!next.available||!['lobby','running'].includes(next.round?.status||'');
+    if(!next.available)status.textContent='The final round has not been configured yet.';
+    else if(!next.joined)status.textContent=actionError||(next.round?.status==='draft'?'The organizers have not opened access yet.':next.round?.status==='finished'?'The final round has finished.':'Enter the shared access code to join.');
+    else status.textContent=actionError;
+    if(!next.joined)return;
+    const q=next.question;
+    element('final-question-number').textContent=q?`${q.number} / 10`:'Waiting';
+    element('final-solvers').textContent=String(q?.solved_count??0);
+    element('final-question-points').textContent=String(next.own?.question_points??0);element('final-total-points').textContent=String(next.own?.total_points??0);
+    const problem=element('final-problem');if(problem.dataset.prompt!==q?.prompt){problem.textContent=q?.prompt||'';problem.dataset.prompt=q?.prompt||'';delete problem.dataset.mathRendered;renderPortalMath(problem.parentElement!);}
+    if(q&&q.number!==loadedQuestion){loadedQuestion=q.number;input.value='';feedback('','');}
+    if(next.own?.last_result!==null&&next.own?.last_result!==undefined&&q)answerFeedback(next.own.last_result,next.own.question_points,q.number,Boolean(q.active&&q.closes_at&&Date.parse(q.closes_at)>Date.now()+offset));
+    remember();tick();
+  }
+  function tick() {
+    if(!state?.joined)return;
+    const q=state.question,remaining=q?.closes_at?Date.parse(q.closes_at)-Date.now()-offset:0;
+    const active=Boolean(q?.active&&remaining>0&&state.round?.status==='running');
+    element('final-timer').textContent=finalClock(q?.closes_at,offset);
+    element('final-phase').textContent=state.round?.status==='finished'?'The final has finished. Your points are saved.':!q?'Waiting for the organizer to open question 1.':!active?`Question ${q.number} is closed. ${q.number===10?'Waiting for the organizer to finish the round.':'Wait for the organizer to open the next question.'}`:state.own?.solved?'Your answer is correct. Wait for the next question.':`Question ${q.number} is open.`;
+    form.hidden=!active||Boolean(state.own?.solved);
+    const disabled=busy||Boolean(pending)||Date.now()-lastSync>7000||!active;
+    input.disabled=disabled;(element('final-submit') as HTMLButtonElement).disabled=disabled;
+    (element('final-retry') as HTMLButtonElement).disabled=busy;
+  }
+  async function refresh() {
+    if(refreshing)return;refreshing=true;
+    try { render(await finalRequest<ParticipantFinalState>(false)); }
+    catch(error) { status.textContent=error instanceof Error?error.message:'Connection interrupted. Reconnecting…'; }
+    finally {refreshing=false;}
+  }
+  async function sendPending() {
+    if(!pending||busy)return;busy=true;actionError='';tick();
+    try {
+      const result=await finalRequest<{result:FinalSubmission;state:ParticipantFinalState}>(false,{...pending});
+      pending=null;remember();render(result.state);
+      if(result.state.question?.number===result.result.question_number&&result.state.own?.solved)answerFeedback(true,result.state.own.question_points,result.result.question_number,false);
+      else answerFeedback(result.result.correct,result.result.points,result.result.question_number,Boolean(result.state.question?.number===result.result.question_number&&result.state.question.active));
+      input.value='';status.textContent='';
+    } catch(error) {
+      if(error instanceof PortalClientError&&discardRejectedFinalSubmission(error.code)){pending=null;remember();}
+      const message=error instanceof Error?error.message:'Could not confirm your submission. Check the last submission before trying another answer.';
+      await refresh();
+      actionError=message;status.textContent=message;
+    } finally {busy=false;tick();}
+  }
+  form.addEventListener('submit',async event=>{
+    event.preventDefault();if(busy||pending||!state?.question)return;
+    const answer=input.value.trim();if(!/^[+-]?[0-9]{1,100}$/.test(answer)){feedback('Answer not submitted','Enter an integer with at most 100 digits. No penalty was applied.');input.focus();return;}
+    pending={action:'submit',question:state.question.number,answer,request_id:crypto.randomUUID()};remember();await sendPending();
+  });
+  element('final-retry').addEventListener('click',()=>void sendPending());
+  join.addEventListener('submit',async event=>{
+    event.preventDefault();const button=join.querySelector('button')!;button.disabled=true;actionError='';
+    try {const result=await finalRequest<{state:ParticipantFinalState}>(false,{action:'join',code:(element('final-code') as HTMLInputElement).value});render(result.state);(element('final-code') as HTMLInputElement).value='';}
+    catch(error){actionError=error instanceof Error?error.message:'Could not enter the final.';status.textContent=actionError;}
+    finally{button.disabled=false;}
+  });
+  async function start() {
+    try {
+      const account=await finalAccountKey();if(!account){status.textContent='';element('final-signin').hidden=false;return;}
+      storageKey='imt_final_pending:'+account;try {pending=parsePendingFinalSubmission(sessionStorage.getItem(storageKey));if(!pending)sessionStorage.removeItem(storageKey);}catch{}
+      await refresh();window.setInterval(()=>void refresh(),1500);window.setInterval(tick,250);
+    }catch(error){status.textContent=error instanceof Error?error.message:'Could not connect to the final.';}
+  }
+  void start();
+</script>

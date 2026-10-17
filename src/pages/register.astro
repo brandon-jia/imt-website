@@ -18,9 +18,11 @@ import Layout from '../layouts/Layout.astro';
 
       <form id="registration-form" action="https://formspree.io/f/xojzalge" method="POST">
         <input type="hidden" name="subject" value="New Waitlist Registration" />
+        <input type="hidden" name="consent_notice_version" value="2026-10-08" />
         <label for="email">Email address</label>
-        <input class="form-control" type="email" id="email" name="email" required autocomplete="email" placeholder="student@example.com" />
-        <div id="status-message" class="form-status" hidden></div>
+        <input class="form-control" type="email" id="email" name="email" required autocomplete="email" aria-describedby="updates-consent" />
+        <label class="consent-field" for="updates-consent"><input id="updates-consent" type="checkbox" name="email_updates_consent" value="yes" required /><span>I want to receive IMT email updates. I can unsubscribe at any time. <a href="/privacy">Privacy policy</a>.</span></label>
+        <div id="status-message" class="form-status" role="status" aria-live="polite" aria-atomic="true" tabindex="-1" hidden></div>
         <button class="button-primary" type="submit" id="submit-btn">Get updates</button>
         <small>Unsubscribe at any time by contacting us.</small>
       </form>
@@ -29,35 +31,8 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
-  const form = document.getElementById('registration-form') as HTMLFormElement;
-  const button = document.getElementById('submit-btn') as HTMLButtonElement;
-  const status = document.getElementById('status-message') as HTMLElement;
-
-  form?.addEventListener('submit', async event => {
-    event.preventDefault();
-    button.textContent = 'Submitting...';
-    button.disabled = true;
-    status.hidden = true;
-
-    try {
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' },
-      });
-      if (!response.ok) throw new Error();
-      form.reset();
-      status.textContent = "You're on the list.";
-      status.className = 'form-status success';
-    } catch {
-      status.textContent = 'Something went wrong. Please try again.';
-      status.className = 'form-status error';
-    }
-
-    status.hidden = false;
-    button.textContent = 'Get updates';
-    button.disabled = false;
-  });
+  import { setupPublicForm } from '../lib/publicForm';
+  setupPublicForm('registration-form', 'submit-btn', 'status-message', 'Submitting...', "You're on the list.", 'Get updates');
 </script>
 
 <style>
@@ -65,7 +40,7 @@ import Layout from '../layouts/Layout.astro';
   .signup-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 0.65fr); gap: clamp(3rem, 10vw, 8rem); align-items: center; padding-block: clamp(5rem, 11vw, 9rem); }
   .signup-grid ul { display: grid; gap: 0.6rem; margin: 2rem 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 0.9rem; }
   .signup-grid li::before { content: "•"; margin-right: 0.7rem; color: var(--green); }
-  .signup-grid form { border-top: 3px solid var(--green); padding-top: 1.4rem; }
+  .signup-grid form { border-top: 1px solid var(--line); padding-top: 1.4rem; }
   .signup-grid label { display: block; margin-bottom: 0.6rem; font-size: 0.75rem; font-weight: 750; text-transform: uppercase; }
   .signup-grid button { width: 100%; margin-top: 0.8rem; }
   .signup-grid small { display: block; margin-top: 0.8rem; color: var(--muted); font-size: 0.72rem; }

@@ -1,5 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
+const diagnosticAvailable = Boolean(import.meta.env.SUPABASE_SERVICE_ROLE_KEY && (import.meta.env.SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL));
 ---
 
 <Layout title="Diagnostic" description="Take an adaptive competition math diagnostic.">
@@ -39,9 +40,9 @@ import Layout from '../../../layouts/Layout.astro';
         </div>
 
         <form method="POST" action="/api/diagnostic/start" class="bg-white text-brand-dark border border-gray-200 rounded-lg p-6 md:p-7 shadow-xl shadow-black/10">
-          <label class="block text-sm font-bold text-brand-dark mb-4">
+          <fieldset><legend class="block text-sm font-bold text-brand-dark mb-4">
             Highest contest experience
-          </label>
+          </legend>
           <div class="space-y-2 mb-6">
             {[
               { value: 'none', label: "I haven't taken one / not sure" },
@@ -64,11 +65,13 @@ import Layout from '../../../layouts/Layout.astro';
             ))}
           </div>
 
-          <button type="submit" class="w-full bg-brand-dark text-brand-gold font-bold py-3 px-5 rounded hover:bg-[#1e3152] transition-colors duration-150 btn-lift">
+          </fieldset><p class="privacy-note mb-4">Answers and results are saved on the server using a random browser identifier. <a href="/privacy">Privacy policy</a> · <a href="/cookies">Cookies and storage</a>.</p>
+          {!diagnosticAvailable && <p class="privacy-note mb-4" role="status">The diagnostic is temporarily unavailable. Please try again later.</p>}
+          <button type="submit" disabled={!diagnosticAvailable} class="w-full bg-brand-dark text-brand-gold font-bold py-3 px-5 rounded hover:bg-[#1e3152] transition-colors duration-150 btn-lift disabled:opacity-50">
             Begin Diagnostic
           </button>
           <p class="text-xs text-slate-400 leading-relaxed mt-4">
-            No account required. Your result is stored in this browser.
+            No account required. A cookie lets this browser access your saved result.
           </p>
         </form>
       </div>

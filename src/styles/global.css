@@ -1,22 +1,21 @@
 @import "tailwindcss";
-@import "katex/dist/katex.min.css";
 
 @theme {
-  --color-brand-dark: #162236;
+  --color-brand-dark: #203d32;
   --color-brand-gold: #f5c518;
-  --color-brand-light: #f4f1e8;
-  --color-brand-green: #4a7c59;
-  --font-sans: "Inter", Arial, sans-serif;
-  --font-serif: "Inter", Arial, sans-serif;
+  --color-brand-light: #f7f4ec;
+  --color-brand-green: #376347;
+  --font-sans: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-serif: "Franklin Gothic Medium", "Segoe UI", Arial, sans-serif;
 }
 
 :root {
-  --ink: #162236;
-  --muted: #647084;
-  --green: #4a7c59;
+  --ink: #203d32;
+  --muted: #535e59;
+  --green: #376347;
   --green-dark: #386044;
   --gold: #f5c518;
-  --paper: #f4f1e8;
+  --paper: #f7f4ec;
   --white: #ffffff;
   --line: #d8d9d3;
   --soft-line: #e7e5de;
@@ -28,12 +27,43 @@
 html {
   background: var(--paper);
   color: var(--ink);
-  font-family: "Inter", Arial, sans-serif;
-  scroll-behavior: smooth;
+  font-family: var(--font-sans);
   scroll-padding-top: 7rem;
 }
 
-body { margin: 0; }
+body { margin: 0; min-width: 0; }
+main { min-width: 0; }
+main:focus { outline: none; }
+img { max-width: 100%; }
+input, select, textarea { min-width: 0; font: inherit; }
+button, a { touch-action: manipulation; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+textarea { resize: vertical; }
+h1, h2, h3 { font-family: var(--font-serif); text-wrap: balance; }
+:where(p, li, dd, a, h1, h2, h3) { overflow-wrap: break-word; }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid #886a00;
+  outline-offset: 4px;
+}
+:where(input, select, textarea):focus-visible { outline-color: var(--green); }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--green); }
+input[type="checkbox"] { width: 1.15rem; height: 1.15rem; flex-shrink: 0; }
+[class*="grid"] > * { min-width: 0; }
+.consent-field { display: flex !important; align-items: flex-start; gap: 0.7rem; font-size: 0.87rem !important; font-weight: 400 !important; text-transform: none !important; line-height: 1.6; }
+.consent-field input { margin-top: 0.25rem; }
+.privacy-note { font-size: 0.85rem; line-height: 1.6; color: var(--muted); }
+.privacy-note a, .consent-field a { text-decoration: underline; }
+.breadcrumbs { padding-block: 1rem; font-size: 0.82rem; }
+.breadcrumbs ol { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+.breadcrumbs li + li::before { content: "/"; margin-right: 0.5rem; color: var(--muted); }
+.breadcrumbs a { color: var(--muted); }
+.breadcrumbs [aria-current] { color: var(--ink); }
+.policy-page { max-width: 780px; padding-block: 3rem 5rem; }
+.policy-page h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); margin: 0 0 1.25rem; line-height: 1.1; }
+.policy-page h2 { margin: 2.5rem 0 0.75rem; font-size: 1.3rem; }
+.policy-page p, .policy-page li { line-height: 1.8; }
+.policy-page a { color: var(--green); }
 
 ::selection {
   background: #e3d99b;
@@ -69,7 +99,7 @@ p { text-wrap: pretty; }
 .section-title {
   margin: 0;
   color: var(--ink);
-  font-family: "Inter", Arial, sans-serif;
+  font-family: var(--font-serif);
   font-weight: 750;
   letter-spacing: -0.03em;
 }
@@ -161,7 +191,8 @@ p { text-wrap: pretty; }
 
 .form-control:focus {
   border-color: var(--green);
-  outline: 3px solid rgba(74, 124, 89, 0.16);
+  outline: 3px solid var(--green);
+  outline-offset: 3px;
 }
 
 .animate-on-load,
@@ -187,6 +218,32 @@ p { text-wrap: pretty; }
 .shadow-lg,
 .shadow-xl,
 .shadow-2xl { box-shadow: none; }
+
+/* Keep legacy pages readable while preserving their text and contest warnings. */
+.text-slate-500, .text-slate-400, .text-gray-400 { color: #59665f; }
+.text-slate-300 { color: #59665f; }
+:where(.bg-white, .bg-brand-light) .text-brand-gold { color: #806300; }
+.bg-brand-dark.text-brand-gold, .bg-brand-dark .text-brand-gold { color: var(--gold); }
+:where(.bg-brand-dark, .site-footer, .next-tournament) :is(.text-slate-500, .text-slate-400, .text-slate-300, .text-brand-green) { color: #d0dad3; }
+:where(.bg-brand-dark) :is(.bg-white, .bg-brand-light) :is(.text-slate-400, .text-slate-500, .text-slate-300) { color: #59665f; }
+[data-section="competition-detail"] > section:first-of-type { background: var(--paper); color: var(--ink); border-bottom: 1px solid var(--line); }
+[data-section="competition-detail"] > section:first-of-type :is(.text-slate-400, .text-slate-500, .text-white\/65, .text-white, .text-brand-green) { color: var(--muted); }
+[data-section="competition-detail"] > section:first-of-type h1 span { color: var(--ink); font-weight: inherit; font-style: normal; }
+[data-section="competition-detail"] > section:first-of-type .rounded-full { background: transparent; padding-inline: 0; }
+[data-section="competition-detail"] .border-l-4 { border-left: 0; padding-left: 0; }
+[data-section="competition-detail"] :is(.border-t-4, .border-b-4) { border-color: var(--line); border-width: 1px; }
+[data-section="competition-detail"] .shadow-inner { box-shadow: none; }
+.mobile-nav { max-height: calc(100dvh - 10rem); overflow-y: auto; }
+.member-row { flex-wrap: wrap; }
+.member-name { flex: 1; min-width: 140px; }
+.member-age { flex: 0 0 80px; }
+.katex-display { max-width: 100%; overflow-x: auto; overflow-y: hidden; }
+@media (max-width: 620px) {
+  input:not([type="checkbox"]):not([type="radio"]), select, textarea { font-size: 16px; }
+  .wordmark { font-size: 1rem !important; }
+  .header-inner { gap: 0.5rem !important; }
+  .footer-links { overflow-wrap: anywhere; }
+}
 
 @media (max-width: 700px) {
   .site-container { width: min(calc(100% - 1.25rem), var(--max-width)); }

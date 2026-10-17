@@ -28,3 +28,4 @@ pnpm-debug.log*
 
 # Unreleased contest statements, solutions, and database import bundles
 .portal-private/
+.local-review/

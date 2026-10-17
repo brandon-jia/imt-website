@@ -1,0 +1,21 @@
+<aside id="final-demo-toolbar" class="final-demo-toolbar" hidden aria-label="Local demonstration">
+  <div class="site-container">
+    <p><strong>Local demonstration</strong> · Viewing as <strong data-demo-user></strong>. Sample questions and isolated data. Initial code: <code>FINAL-DEMO-2026</code>.</p>
+    <nav aria-label="Demo views">
+      <a href="/test-portal/admin/final?as=admin" target="_blank" rel="noopener">Organizer</a>
+      {['alice','bob','charlie','dana','eli'].map(name => <a href={`/test-portal/final?as=${name}`} target="_blank" rel="noopener">{name.charAt(0).toUpperCase()+name.slice(1)}</a>)}
+    </nav>
+    <div class="demo-actions"><button type="button" data-demo-action="simulate">Simulate participant answers</button><button type="button" data-demo-action="expire">Expire current timer</button>
+      <details><summary>Reset demonstration</summary><p>This removes the demo’s answers and restores all ten sample questions.</p><button type="button" data-demo-action="reset">Reset demo data</button></details></div>
+    <p data-demo-status role="status"></p>
+  </div>
+</aside>
+<style>
+  .final-demo-toolbar { background:#fff4cf; border-bottom:1px solid #aa8b35; color:#453b21; padding-block:1rem; font-size:.85rem; }
+  .final-demo-toolbar[hidden] { display:none; }
+  p { margin:.3rem 0; line-height:1.6; }
+  nav,.demo-actions { display:flex; flex-wrap:wrap; gap:.6rem 1rem; margin-top:.7rem; }
+  a { color:inherit; font-weight:700; }
+  button { border:1px solid #aa8b35; background:transparent; padding:.4rem .7rem; border-radius:.2rem; font-weight:600; }
+  details { align-self:center; } summary { cursor:pointer; text-decoration:underline; }
+</style>

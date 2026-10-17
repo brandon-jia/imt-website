@@ -2,11 +2,7 @@ import { defineMiddleware } from 'astro:middleware';
 
 const productionDirectives = import.meta.env.PROD ? ['upgrade-insecure-requests'] : [];
 function contentSecurityPolicy(pathname: string) {
-  // The legacy competition map loads a small inline ES module from jsDelivr.
-  // Keep that exception scoped to its page; the Test Portal never permits inline scripts.
-  const scripts = pathname.replace(/\/+$/, '') === '/competitions/spring-2026'
-    ? "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://va.vercel-scripts.com"
-    : "script-src 'self' https://va.vercel-scripts.com";
+  const scripts = "script-src 'self'";
   return [
     "default-src 'self'",
     "base-uri 'self'",
@@ -15,10 +11,10 @@ function contentSecurityPolicy(pathname: string) {
     "frame-ancestors 'none'",
     "form-action 'self' https://formspree.io",
     scripts,
-    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-    "font-src 'self' data: https://fonts.gstatic.com",
+    "style-src 'self' 'unsafe-inline'",
+    "font-src 'self' data:",
     "img-src 'self' data: blob: https:",
-    "connect-src 'self' https://cdn.jsdelivr.net https://formspree.io https://*.supabase.co wss://*.supabase.co https://vitals.vercel-insights.com https://*.vercel-insights.com ws://localhost:* ws://127.0.0.1:*",
+    "connect-src 'self' https://formspree.io https://*.supabase.co wss://*.supabase.co ws://localhost:* ws://127.0.0.1:*",
     "worker-src 'self' blob:",
     "manifest-src 'self'",
     ...productionDirectives,

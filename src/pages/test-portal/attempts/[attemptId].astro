@@ -126,7 +126,7 @@ const { attemptId } = Astro.params;
       </div>
     </div>
 
-    <div id="fullscreen-gate" class="hidden fixed inset-0 z-[100] bg-brand-dark/95 backdrop-blur-sm items-center justify-center p-6">
+    <div id="fullscreen-gate" class="hidden fixed inset-0 z-[100] bg-brand-dark/95  items-center justify-center p-6">
       <div class="max-w-md text-center text-white">
         <div class="w-16 h-16 mx-auto rounded-full bg-white/10 text-brand-gold flex items-center justify-center mb-6">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg>
@@ -260,7 +260,7 @@ const { attemptId } = Astro.params;
   function setSaving(saving: boolean, message = '') {
     busyOperations += saving ? 1 : -1;
     busyOperations = Math.max(0, busyOperations);
-    saveIndicator.textContent = busyOperations > 0 ? 'Saving…' : saveFailed ? 'Unsaved changes — retry before leaving' : 'All changes saved';
+    saveIndicator.textContent = busyOperations > 0 ? 'Saving…' : saveFailed ? 'Unsaved changes: retry before leaving' : 'All changes saved';
     saveIndicator.className = `text-[11px] font-semibold ${busyOperations > 0 ? 'text-brand-gold' : 'text-slate-400'}`;
     if (message) saveStatus.textContent = message;
   }
@@ -541,12 +541,12 @@ const { attemptId } = Astro.params;
     fullscreenLocked = locked;
     const gate = document.getElementById('fullscreen-gate')!;
     gate.classList.remove('hidden'); gate.classList.add('flex');
-    document.getElementById('fullscreen-gate-title')!.textContent = locked ? 'TEST LOCKED — 6 WARNINGS' : count === 5 ? 'FINAL WARNING — RETURN TO FULLSCREEN' : 'WARNING — RETURN TO FULLSCREEN';
+    document.getElementById('fullscreen-gate-title')!.textContent = locked ? 'TEST LOCKED: 6 WARNINGS' : count === 5 ? 'FINAL WARNING: RETURN TO FULLSCREEN' : 'WARNING: RETURN TO FULLSCREEN';
     document.getElementById('fullscreen-policy-message')!.textContent = locked
       ? 'Your test is locked after 6 fullscreen exits. Contact an organizer to unlock it. Your timer continues running.'
       : 'Fullscreen warning ' + count + ' of 6. Even an accidental exit counts. ' + (count === 5 ? 'ONE MORE EXIT WILL LOCK YOUR TEST. ' : '') + 'Return to fullscreen now. Your timer is running.';
     (document.getElementById('enter-fullscreen') as HTMLButtonElement).disabled = locked;
-    document.getElementById('enter-fullscreen')!.textContent = locked ? 'Contact an organizer to unlock' : 'Return to fullscreen — keep taking the test';
+    document.getElementById('enter-fullscreen')!.textContent = locked ? 'Contact an organizer to unlock' : 'Return to fullscreen: keep taking the test';
     if (locked) {
       workspace.inert = true;
       window.clearTimeout(numericSaveTimer);
@@ -896,7 +896,7 @@ const { attemptId } = Astro.params;
     if (scratchDeadline && Date.parse(scratchDeadline) > Date.now() + clockOffset) scratchTimerHandle = window.setInterval(updateScratchClock, 1000);
     const list = document.getElementById(payload.attempt.status === 'in_progress' ? 'scratch-files' : 'finished-scratch-files')!;
     list.replaceChildren();
-    if (!result.files.length) list.textContent = 'NO SCRATCH PAPER UPLOADED — upload before the deadline to remain eligible for prizes and the final round.';
+    if (!result.files.length) list.textContent = 'NO SCRATCH PAPER UPLOADED: upload before the deadline to remain eligible for prizes and the final round.';
     for (const file of result.files) {
       const li = document.createElement('li'); li.textContent = file.file_name + ' · Saved ';
       if (result.editable) {

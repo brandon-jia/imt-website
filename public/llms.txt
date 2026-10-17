@@ -1,0 +1,19 @@
+# Integrated Math
+
+> Student-run, free online mathematics competitions and learning resources.
+
+Official website: https://www.integratedmath.org
+Contact: info@integratedmath.org
+
+## Public information
+- [Competitions](https://www.integratedmath.org/competitions): Dates, formats, and tournament archive.
+- [Fall 2026](https://www.integratedmath.org/competitions/fall-2026): Event rules and format.
+- [Spring 2026](https://www.integratedmath.org/competitions/spring-2026): Results, problems, and solutions.
+- [Learning resources](https://www.integratedmath.org/learn): Diagnostic information and resource archive.
+- [Team and contact](https://www.integratedmath.org/team): Organizers and contact form.
+- [Sponsors](https://www.integratedmath.org/sponsors): Current sponsors.
+- [Privacy](https://www.integratedmath.org/privacy): Information practices.
+- [Terms](https://www.integratedmath.org/terms): Use of resources and services.
+- [Cookies](https://www.integratedmath.org/cookies): Account and diagnostic storage.
+
+Contest attempts, administrator pages, diagnostic results, and API endpoints contain private or operational data and are not public reference materials. Follow the event rules and the reuse notices supplied with individual resources.

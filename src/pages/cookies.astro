@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Cookies & Storage" description="Cookies and browser storage used to keep Integrated Math accounts and diagnostics working.">
+  <article class="site-container policy-page">
+    <h1>Cookies and browser storage</h1>
+    <p class="privacy-note">Last updated October 17, 2026.</p>
+    <h2>Browsing public pages</h2>
+    <p>Public pages do not set optional analytics or advertising cookies. They do not load visitor analytics, external font services, or third-party map scripts.</p>
+    <h2>Requested account and diagnostic features</h2>
+    <ul>
+      <li><strong>Account authentication:</strong> Supabase uses browser local storage to keep your sign-in session. Signing out removes the active session.</li>
+      <li><strong>Contest attempts:</strong> session storage keeps the token that connects a browser tab to an attempt. This supports the contest’s one-session protections.</li>
+      <li><strong>Final-round submissions:</strong> session storage keeps an unconfirmed answer and its request identifier until the server confirms or rejects it. This lets you retry a request without submitting the same answer twice.</li>
+      <li><strong>Diagnostics:</strong> the <code>im_uid</code> cookie contains a random identifier used to retrieve this browser’s diagnostic record. It is set when you start a diagnostic, expires after one year, and is inaccessible to page scripts.</li>
+    </ul>
+    <h2>Your choices</h2>
+    <p>You can remove cookies and site storage in your browser settings. Removing them may sign you out or disconnect you from a diagnostic or active attempt. Avoid clearing storage during a timed contest. Browser deletion does not remove the information stored on the server; contact <a href="mailto:info@integratedmath.org">info@integratedmath.org</a> for a data request.</p>
+    <h2>Optional tracking</h2>
+    <p>Optional visitor analytics are disabled. We will update this notice and provide any required consent choices before introducing optional tracking.</p>
+    <p>Read the <a href="/privacy">privacy policy</a> for information about submitted forms, accounts, and contest work.</p>
+  </article>
+</Layout>

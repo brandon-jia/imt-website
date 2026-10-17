@@ -52,7 +52,7 @@ import Layout from '../../layouts/Layout.astro';
       <div class="tournament-list">
         <article class="tournament-row current">
           <div>
-            <span class="status">Round 1 is underway</span>
+            <span class="status">Fall tournament</span>
             <h3>Fall 2026</h3>
             <p>Online qualifier and live final</p>
           </div>
@@ -125,7 +125,7 @@ import Layout from '../../layouts/Layout.astro';
   .tournament-row.current { border-top: 3px solid var(--green); }
   .status { color: var(--green); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
   .status.past { color: var(--muted); }
-  .tournament-row h3 { margin: 0.4rem 0 0.15rem; font-family: "Inter", Arial, sans-serif; font-size: 1.85rem; font-weight: 750; letter-spacing: -0.03em; }
+  .tournament-row h3 { margin: 0.4rem 0 0.15rem; font-family: var(--font-sans); font-size: 1.85rem; font-weight: 750; letter-spacing: -0.03em; }
   .tournament-row > div > p { margin: 0; color: var(--muted); font-size: 0.84rem; }
   .tournament-row dl { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; }
   .tournament-row dl div { border-left: 1px solid var(--line); padding-left: 1rem; }

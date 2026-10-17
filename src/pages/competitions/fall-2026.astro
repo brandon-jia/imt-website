@@ -25,7 +25,7 @@ import Layout from '../../layouts/Layout.astro';
       <div class="flex flex-wrap items-center gap-3 mb-5">
         <span class="inline-flex items-center gap-1.5 bg-brand-green/20 text-brand-green text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest">
           <span class="w-1.5 h-1.5 rounded-full bg-brand-green inline-block"></span>
-          Round 1 is underway
+          Fall tournament
         </span>
         <span class="text-slate-500 text-sm font-medium">Fall 2026</span>
       </div>
@@ -179,19 +179,19 @@ import Layout from '../../layouts/Layout.astro';
 
       <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] gap-8 items-start">
         <div class="bg-white/[0.05] border border-white/10 rounded-xl p-7 md:p-8 reveal-on-scroll delay-100">
-          <p class="text-lg text-slate-200 font-light leading-relaxed mb-7">The final has about 10 short-answer problems, released one at a time. Competitors submit answers live, so <span class="text-white font-semibold">correctness and speed both matter.</span></p>
+          <p class="text-lg text-slate-200 font-light leading-relaxed mb-7">The individual final has 10 integer-answer problems, opened one at a time by an organizer. Competitors submit answers live, so <span class="text-white font-semibold">correctness and speed both matter.</span></p>
           <div class="grid sm:grid-cols-2 gap-4">
-            <div class="border border-white/10 rounded-lg p-4"><p class="text-brand-gold font-serif font-bold text-2xl">10 → 5</p><p class="text-xs text-slate-400 mt-1">The first correct answer earns 10 points, followed by 9, 8, and 7. Later correct answers earn 5.</p></div>
-            <div class="border border-white/10 rounded-lg p-4"><p class="text-brand-gold font-serif font-bold text-2xl">~10 min</p><p class="text-xs text-slate-400 mt-1">Time limit for each problem.</p></div>
+            <div class="border border-white/10 rounded-lg p-4"><p class="text-brand-gold font-serif font-bold text-2xl">10, 8, 6, 4</p><p class="text-xs text-slate-400 mt-1">The first correct answer earns 10 base points, followed by 8 and 6. Every later correct answer earns 4 base points.</p></div>
+            <div class="border border-white/10 rounded-lg p-4"><p class="text-brand-gold font-serif font-bold text-2xl">8 min</p><p class="text-xs text-slate-400 mt-1">Time limit for each problem. An organizer can end a question early.</p></div>
           </div>
         </div>
 
         <div class="border border-white/10 rounded-xl p-7 md:p-8 reveal-on-scroll delay-200">
           <h3 class="font-bold text-sm text-white uppercase tracking-wider mb-5 pb-3 border-b border-white/10">How scoring works</h3>
           <ul class="space-y-4 text-sm text-slate-300 leading-relaxed">
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">01</span><span>Correct submissions are rewarded in order of arrival: 10, 9, 8, 7, then a smaller base score for later correct answers.</span></li>
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">02</span><span>Each incorrect submission costs about one point on that problem.</span></li>
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">03</span><span>This discourages answer spamming while still letting competitors fix a genuine mistake.</span></li>
+            <li class="flex gap-3"><span class="text-brand-gold font-bold">01</span><span>Correct submissions are rewarded in server acceptance order: 10, 8, 6, then 4 base points for every later correct answer.</span></li>
+            <li class="flex gap-3"><span class="text-brand-gold font-bold">02</span><span>Each incorrect submission deducts 2 points from that problem’s award, down to a minimum of 0. An unsolved problem earns 0.</span></li>
+            <li class="flex gap-3"><span class="text-brand-gold font-bold">03</span><span>You can submit another answer after an incorrect submission while the question is open.</span></li>
           </ul>
         </div>
       </div>
@@ -219,23 +219,9 @@ import Layout from '../../layouts/Layout.astro';
       </div>
 
       <div class="mt-14 pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 reveal-on-scroll">
-        <p class="text-sm font-semibold text-brand-dark">Round 1 has started. Complete both sections by October 10.</p>
+        <p class="text-sm font-semibold text-brand-dark">See the portal for available rounds and your contest status.</p>
         <a href="/test-portal" class="shrink-0 inline-block bg-brand-dark text-brand-gold font-bold py-3 px-7 rounded hover:bg-[#1e3152] transition-colors duration-150 btn-lift text-sm">Enter the tournament portal</a>
       </div>
     </div>
   </section>
 </Layout>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-  });
-</script>

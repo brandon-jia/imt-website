@@ -41,8 +41,8 @@ import Layout from '../layouts/Layout.astro';
                     </button>
                 </div>
 
-                <div id="error-message" class="text-red-500 text-sm hidden font-semibold bg-red-50 p-3 rounded-lg"></div>
-                <div id="success-message" class="text-brand-green text-sm hidden font-semibold bg-green-50 p-3 rounded-lg">Team data updated successfully!</div>
+                <div id="error-message" role="alert" class="text-red-500 text-sm hidden font-semibold bg-red-50 p-3 rounded-lg"></div>
+                <div id="success-message" role="status" class="text-brand-green text-sm hidden font-semibold bg-green-50 p-3 rounded-lg">Team data updated successfully!</div>
 
                 <button type="submit" id="save-btn" class="w-full bg-brand-dark text-brand-gold font-bold text-lg py-4 rounded-xl hover:bg-slate-800 transition shadow-lg">
                     Save Changes
@@ -74,7 +74,7 @@ import Layout from '../layouts/Layout.astro';
         const { data: { user } } = await supabase.auth.getUser();
         
         if (!user) {
-            window.location.href = '/register';
+            window.location.href = '/test-portal';
             return;
         }
 
@@ -115,13 +115,13 @@ import Layout from '../layouts/Layout.astro';
         
         // Only allow removing if it's not the first member
         const removeBtnHTML = currentMembers > 1 
-            ? `<button type="button" class="remove-member-btn text-slate-400 hover:text-red-500 transition w-8 flex justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button>`
+            ? `<button type="button" aria-label="Remove teammate" class="remove-member-btn text-slate-400 hover:text-red-500 transition w-8 flex justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></button>`
             : `<div class="w-8"></div>`;
 
         row.innerHTML = `
             <div class="bg-slate-200 text-slate-600 font-bold w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-sm number-circle">${currentMembers}</div>
-            <input type="text" required class="member-name w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-green outline-none" placeholder="Teammate Name">
-            <input type="number" required min="5" max="25" class="member-age w-24 px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-green outline-none" placeholder="Age">
+            <input type="text" required class="member-name w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-green outline-none" aria-label="Teammate name" autocomplete="name">
+            <input type="number" required min="5" max="25" class="member-age w-24 px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-green outline-none" aria-label="Teammate age">
             ${removeBtnHTML}
         `;
         (row.querySelector('.member-name') as HTMLInputElement).value = String(nameValue);
@@ -160,6 +160,7 @@ import Layout from '../layouts/Layout.astro';
         successMessage.classList.add('hidden');
         saveBtn.textContent = 'Saving...';
 
+        saveBtn.disabled = true;
         // Rebuild roster array
         const updatedRoster: { name: string; age: number }[] = [];
         document.querySelectorAll('.member-row').forEach(row => {
@@ -181,18 +182,13 @@ import Layout from '../layouts/Layout.astro';
             errorMessage.classList.remove('hidden');
         } else {
             successMessage.classList.remove('hidden');
-            setTimeout(() => successMessage.classList.add('hidden'), 3000);
+
         }
         saveBtn.textContent = 'Save Changes';
+        saveBtn.disabled = false;
     });
 
-    // Add animation styles for smooth loading
-    const style = document.createElement('style');
-    style.innerHTML = `
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
-    `;
-    document.head.appendChild(style);
+
 
     // Kick off
     loadData();

@@ -31,7 +31,7 @@ import Layout from '../../layouts/Layout.astro';
       <aside class="mb-8 rounded-xl border-2 border-red-600 bg-red-50 p-6 text-red-950" aria-label="Required device and fullscreen rules">
         <h2 class="text-xl font-extrabold">TAKE THE TEST ON A COMPUTER</h2>
         <p class="mt-2 font-bold">Use a laptop or desktop with a fullscreen-capable browser. Do not take the test on a phone or tablet.</p>
-        <p class="mt-3"><strong>DO NOT EXIT FULLSCREEN — even once counts as a warning.</strong> Your sixth fullscreen exit locks your test until an organizer unlocks it. The timer keeps running. Avoid Escape, switching tabs, or opening other apps while solving.</p>
+        <p class="mt-3"><strong>DO NOT EXIT FULLSCREEN: even once counts as a warning.</strong> Your sixth fullscreen exit locks your test until an organizer unlocks it. The timer keeps running. Avoid Escape, switching tabs, or opening other apps while solving.</p>
       </aside>
       <aside class="mb-8 rounded-xl border-2 border-amber-600 bg-amber-50 p-6 text-amber-950" aria-label="Scratch-paper eligibility requirement">
         <h2 class="text-xl font-extrabold">NO SCRATCH PAPER = NO PRIZES OR FINAL-ROUND QUALIFICATION</h2>
@@ -59,7 +59,7 @@ import Layout from '../../layouts/Layout.astro';
           <form id="signin-form" role="tabpanel" aria-labelledby="signin-tab" class="p-6 md:p-8 space-y-5">
             <div>
               <label for="signin-email" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">Email</label>
-              <input id="signin-email" type="email" autocomplete="email" required class="portal-input" placeholder="student@example.com" />
+              <input id="signin-email" type="email" autocomplete="email" required class="portal-input" />
             </div>
             <div>
               <div class="flex items-center justify-between mb-2">
@@ -75,17 +75,18 @@ import Layout from '../../layouts/Layout.astro';
           <form id="signup-form" role="tabpanel" aria-labelledby="signup-tab" class="hidden p-6 md:p-8 space-y-5">
             <div>
               <label for="signup-name" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">Display name</label>
-              <input id="signup-name" type="text" autocomplete="name" maxlength="160" required class="portal-input" placeholder="Your name" />
+              <input id="signup-name" type="text" autocomplete="name" maxlength="160" required class="portal-input" />
             </div>
             <div>
               <label for="signup-email" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">Email</label>
-              <input id="signup-email" type="email" autocomplete="email" required class="portal-input" placeholder="student@example.com" />
+              <input id="signup-email" type="email" autocomplete="email" required class="portal-input" />
             </div>
             <div>
               <label for="signup-password" class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">Password</label>
               <input id="signup-password" type="password" autocomplete="new-password" minlength="8" required class="portal-input" />
               <p class="text-xs text-slate-400 mt-2">Use at least 8 characters.</p>
             </div>
+            <label class="consent-field"><input type="checkbox" name="terms_accepted" required /><span>I agree to the <a href="/terms">terms of use</a> and have read the <a href="/privacy">privacy policy</a>.</span></label>
             <button type="submit" class="portal-primary w-full">Create account</button>
           </form>
 
@@ -117,6 +118,7 @@ import Layout from '../../layouts/Layout.astro';
           </div>
           <div class="flex flex-wrap items-center gap-3">
             <span id="admin-actions"></span>
+            <a href="/test-portal/final" class="portal-secondary">Fall 2026 final</a>
             <button id="signout-button" type="button" class="portal-secondary">Sign out</button>
           </div>
         </div>
@@ -150,6 +152,7 @@ import Layout from '../../layouts/Layout.astro';
 
 <script>
   import { escapeHtml, formatPortalDate, formatPortalDuration, getPortalSession, portalFetch, supabase } from '../../lib/testPortalClient';
+  import { isBackendConfigured } from '../../lib/supabase.js';
 
 
   interface TestSummary {
@@ -298,6 +301,14 @@ import Layout from '../../layouts/Layout.astro';
 
   let dashboardRequest = 0;
   async function loadDashboard(knownSession?: Awaited<ReturnType<typeof getPortalSession>>) {
+    if (!isBackendConfigured) {
+      showAuth('signin');
+      showNotice('Sign-in and account creation are temporarily unavailable. Please try again later or contact info@integratedmath.org.');
+      authPanel.querySelectorAll('input, button').forEach(control => {
+        if (!(control as HTMLElement).classList.contains('auth-tab')) (control as HTMLInputElement | HTMLButtonElement).disabled = true;
+      });
+      return;
+    }
     const requestId = ++dashboardRequest;
     document.getElementById('admin-actions')!.replaceChildren();
     clearNotice();
@@ -378,7 +389,7 @@ import Layout from '../../layouts/Layout.astro';
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { display_name: displayName }, emailRedirectTo: `${location.origin}/test-portal` },
+      options: { data: { display_name: displayName, terms_accepted_at: new Date().toISOString(), terms_version: '2026-10-17' }, emailRedirectTo: `${location.origin}/test-portal` },
     });
     setBusy(signupForm, false);
     if (error) return showNotice(error.message);

@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 ---
 
-<Layout title="Spring 2026: Inaugural Tournament">
+<Layout title="Spring 2026: Inaugural Tournament" description="Placements, statistics, problems, and solutions for the inaugural Integrated Mathematics Tournament.">
 
   <!-- ══════════════════════════════════════════
        ARCHIVE HEADER: document / report feel
@@ -31,7 +31,7 @@ import Layout from '../../layouts/Layout.astro';
       <!-- Title -->
       <h1 class="font-serif font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight mb-4 max-w-3xl">
         Inaugural Integrated<br />
-        <span class="font-normal italic text-white/65">Mathematics Tournament</span>
+        <span class="text-brand-dark">Mathematics Tournament</span>
       </h1>
       <p class="text-slate-400 max-w-xl text-base font-light leading-relaxed">
         This page contains all placements, statistics, problems, and solutions for the Inaugural IMT.
@@ -66,11 +66,11 @@ import Layout from '../../layouts/Layout.astro';
       </div>
 
       <div class="w-full max-w-5xl mx-auto bg-slate-50 rounded-xl border border-gray-200 shadow-inner relative overflow-hidden">
-        <div class="absolute inset-0 pointer-events-none opacity-[0.03]"
-             style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 20px 20px;"></div>
-        <div id="d3-world-map" class="w-full aspect-[1.8/1] relative"></div>
+
+        <img src="/archive-world-map.svg" width="900" height="375" loading="lazy" decoding="async" alt="World map highlighting participating regions from the Spring 2026 archive." class="w-full h-auto" />
       </div>
 
+      <details class="mt-5 text-sm text-slate-600"><summary class="cursor-pointer font-semibold py-3">Highlighted countries</summary><p class="mt-3 leading-relaxed">United States of America, United Kingdom, Italy, France, Russia, Algeria, Burkina Faso, Egypt, Ethiopia, Ghana, Kenya, Malawi, Morocco, Nigeria, Rwanda, Bangladesh, India, Iran, Kyrgyzstan, Malaysia, Pakistan, Philippines, United Arab Emirates, Vietnam, Brazil, Peru, New Zealand, Timor-Leste.</p><p class="mt-2">The highlighted subset comes from the existing archive map and is not an exhaustive list.</p></details>
       <div class="flex flex-col sm:flex-row items-center justify-center gap-10 mt-10 pt-8 border-t border-gray-100">
         <div class="text-center">
           <div class="font-serif font-bold text-4xl text-brand-dark mb-1">200+</div>
@@ -78,7 +78,7 @@ import Layout from '../../layouts/Layout.astro';
         </div>
         <div class="flex items-center gap-2 bg-brand-light border border-gray-200 rounded-full px-5 py-2.5 text-sm font-semibold text-brand-dark shadow-sm">
           <span class="w-2 h-2 rounded-full bg-brand-green animate-pulse"></span>
-          Hover to explore regions
+          Participating regions
         </div>
         <div class="text-center">
           <div class="font-serif font-bold text-4xl text-brand-dark mb-1">35+</div>
@@ -104,9 +104,6 @@ import Layout from '../../layouts/Layout.astro';
 
         <div class="bg-white border border-gray-200 p-8 rounded-xl shadow-sm reveal-on-scroll delay-100">
           <h3 class="flex items-center gap-2 text-sm font-bold text-brand-dark uppercase tracking-wider mb-5 pb-3 border-b border-gray-100">
-            <svg class="w-4 h-4 text-brand-gold flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-            </svg>
             Overall Team Champions
           </h3>
           <ul class="space-y-4">
@@ -138,9 +135,6 @@ import Layout from '../../layouts/Layout.astro';
 
         <div class="bg-white border border-gray-200 p-8 rounded-xl shadow-sm reveal-on-scroll delay-200">
           <h3 class="flex items-center gap-2 text-sm font-bold text-brand-dark uppercase tracking-wider mb-5 pb-3 border-b border-gray-100">
-            <svg class="w-4 h-4 text-brand-green flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"/>
-            </svg>
             Integrated Round
           </h3>
           <ul class="space-y-4">
@@ -178,7 +172,7 @@ import Layout from '../../layouts/Layout.astro';
           Subject Test Champions
         </h3>
         <div class="grid sm:grid-cols-2 md:grid-cols-4 gap-5">
-  
+
           <div class="bg-white border border-gray-200 border-t-2 border-t-brand-green p-6 rounded-lg shadow-sm">
             <h4 class="text-[11px] font-bold text-brand-dark uppercase tracking-widest mb-3 pb-2 border-b border-gray-100">Algebra</h4>
             <ul class="space-y-2 text-sm font-medium text-brand-dark">
@@ -253,11 +247,7 @@ import Layout from '../../layouts/Layout.astro';
             { title: 'Integrated Round', desc: 'Quantum mechanics integrated with data analysis.', p: '/pdfs/IMTspring2026_integrated_problems.pdf', s: '/pdfs/IMTspring2026_integrated_solutions.pdf' },
           ].map(test => (
             <div class="bg-brand-light border-l-4 border-brand-dark border border-gray-200 p-7 rounded-r-xl flex flex-col justify-between group relative overflow-hidden">
-              <div class="absolute top-0 right-0 p-4 opacity-[0.04] pointer-events-none">
-                <svg class="w-24 h-24 text-brand-dark" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-                </svg>
-              </div>
+
               <div class="mb-5 relative z-10">
                 <h4 class="font-serif font-bold text-xl text-brand-dark mb-1">{test.title}</h4>
                 <p class="text-sm text-slate-500 leading-relaxed">{test.desc}</p>
@@ -311,78 +301,3 @@ import Layout from '../../layouts/Layout.astro';
   </section>
 
 </Layout>
-
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const observer = new IntersectionObserver((entries, obs) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('is-revealed');
-          obs.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1 });
-    document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
-  });
-</script>
-
-<script type="module" is:inline>
-  import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-  import * as topojson from "https://cdn.jsdelivr.net/npm/topojson-client@3/+esm";
-
-  const container = document.getElementById('d3-world-map');
-  if (!container) throw new Error('Map container missing');
-
-  const width  = container.clientWidth  || 900;
-  const height = container.clientHeight || 500;
-
-  const svg = d3.select('#d3-world-map')
-    .append('svg')
-    .attr('viewBox', `0 0 ${width} ${height}`)
-    .attr('preserveAspectRatio', 'xMidYMid meet')
-    .attr('class', 'w-full h-full');
-
-  const projection = d3.geoNaturalEarth1()
-    .scale(width / 5.2)
-    .translate([width / 2.05, height / 1.65]);
-  const path = d3.geoPath().projection(projection);
-
-  const activeCountries = [
-    'United States of America','United Kingdom','Italy','France','Russia',
-    'Algeria','Burkina Faso','Egypt','Ethiopia','Ghana','Kenya',
-    'Malawi','Morocco','Nigeria','Rwanda','Bangladesh','India',
-    'Iran','Kyrgyzstan','Malaysia','Pakistan','Philippines',
-    'United Arab Emirates','Vietnam','Brazil','Peru','New Zealand','Timor-Leste',
-  ];
-
-  const tooltip = d3.select('#d3-world-map')
-    .append('div')
-    .attr('class', 'absolute hidden bg-brand-dark text-white text-xs font-bold px-3 py-1.5 rounded shadow-lg pointer-events-none z-50')
-    .style('opacity', 0);
-
-  d3.json('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json').then(world => {
-    const countries = topojson.feature(world, world.objects.countries).features;
-    svg.append('g')
-      .selectAll('path')
-      .data(countries.filter(d => d.properties.name !== 'Antarctica'))
-      .join('path')
-      .attr('d', path)
-      .attr('fill',         d => activeCountries.includes(d.properties.name) ? '#4A7C59' : '#1e293b')
-      .attr('stroke',       '#334155')
-      .attr('stroke-width', 0.5)
-      .on('mouseover', function(_event, d) {
-        if (!activeCountries.includes(d.properties.name)) return;
-        d3.select(this).attr('fill','#386044').attr('stroke','#F5C518').attr('stroke-width', 1.5).raise();
-        tooltip.classed('hidden', false).style('opacity', 1).text(d.properties.name);
-      })
-      .on('mousemove', function(event) {
-        const [x, y] = d3.pointer(event, container);
-        tooltip.style('left', (x + 14) + 'px').style('top', (y - 14) + 'px');
-      })
-      .on('mouseout', function(_event, d) {
-        if (!activeCountries.includes(d.properties.name)) return;
-        d3.select(this).attr('fill','#4A7C59').attr('stroke','#334155').attr('stroke-width', 0.5);
-        tooltip.style('opacity', 0).classed('hidden', true);
-      });
-  });
-</script>
