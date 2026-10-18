@@ -5,8 +5,9 @@ const {default:app}=await import(pathToFileURL(resolve('.vercel/output/_function
 const origin='https://www.integratedmath.org';
 for(const path of ['/api/test-portal/final','/api/test-portal/admin/final']){
   const response=await app.fetch(new Request(origin+path,{headers:{'X-Final-Demo-User':'admin'}}));
-  assert.equal(response.status,401,`${path} must not recognize demo identities`);
-  assert.equal((await response.json()).code,'AUTH_REQUIRED');
+  const closed = path === '/api/test-portal/final';
+  assert.equal(response.status,closed ? 403 : 401,`${path} must not recognize demo identities`);
+  assert.equal((await response.json()).code,closed ? 'PORTAL_CLOSED' : 'AUTH_REQUIRED');
 }
 const hostile=await app.fetch(new Request(origin+'/api/test-portal/admin/final',{method:'POST',headers:{Origin:'https://example.invalid','Content-Type':'application/json'},body:JSON.stringify({action:'initialize'})}));
 assert.equal(hostile.status,403);

@@ -7,7 +7,8 @@ Contact: info@integratedmath.org
 
 ## Public information
 - [Competitions](https://www.integratedmath.org/competitions): Dates, formats, and tournament archive.
-- [Fall 2026](https://www.integratedmath.org/competitions/fall-2026): Event rules and format.
+- [Fall 2026 archive](https://www.integratedmath.org/competitions/fall-2026): Overall and round placements, honorable mentions, and registration figures of 440+ competitors from 57+ countries; problem and solution files are pending.
+- [Fall 2026 rules](https://www.integratedmath.org/competitions/fall-2026/rules): Published event rules and format.
 - [Spring 2026](https://www.integratedmath.org/competitions/spring-2026): Results, problems, and solutions.
 - [Learning resources](https://www.integratedmath.org/learn): Diagnostic information and resource archive.
 - [Team and contact](https://www.integratedmath.org/team): Organizers and contact form.

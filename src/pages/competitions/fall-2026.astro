@@ -1,227 +1,90 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-
+import archive from '../../data/fall2026Archive.json';
+const resources: { title: string; problems: string | null; solutions: string | null }[] = archive.resources;
+const statistics: string | null = archive.statistics;
+const placements = [{ title:'Overall Top Scorers',names:archive.overall },...archive.rounds.map(round=>({ title:`${round.title} Top Scorers`,names:round.topScorers }))];
 ---
 
-<Layout
-  title="Fall 2026 Integrated Mathematics Tournament"
-  description="Format, dates, rounds, and awards for the Fall 2026 Integrated Mathematics Tournament."
->
-  <!-- ══════════════════════════════════════════
-       HERO
-  ══════════════════════════════════════════ -->
+<Layout title="Fall 2026 Results and Archive" description="Official Fall 2026 IMT placements, honorable mentions, and participating countries. 440+ registered competitors from 57+ countries.">
   <section class="bg-brand-dark text-brand-light border-b-4 border-brand-green">
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 pt-10 pb-16 animate-on-load">
-      <a
-        href="/competitions"
-        class="inline-flex items-center text-slate-400 hover:text-brand-gold transition-colors duration-150 text-sm font-medium mb-10 group"
-      >
-        <svg class="w-4 h-4 mr-1.5 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 pt-10 pb-16">
+      <a href="/competitions" class="inline-flex items-center text-slate-400 hover:text-brand-gold transition-colors duration-150 text-sm font-medium mb-10 group">
+        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
         Tournament Directory
       </a>
-
-      <div class="flex flex-wrap items-center gap-3 mb-5">
-        <span class="inline-flex items-center gap-1.5 bg-brand-green/20 text-brand-green text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest">
-          <span class="w-1.5 h-1.5 rounded-full bg-brand-green inline-block"></span>
-          Fall tournament
-        </span>
-        <span class="text-slate-500 text-sm font-medium">Fall 2026</span>
-      </div>
-
-      <h1 class="font-serif font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight mb-4 max-w-4xl">
-        Fall 2026 Integrated<br />
-        <span class="font-serif font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight mb-4 max-w-4xl">Mathematics Tournament</span>
-      </h1>
-      <p class="text-slate-400 max-w-2xl text-base font-light leading-relaxed">
-        Two rounds: a timed online qualifier and a live, proctored final on October 17.
-      </p>
-
+      <h1 class="font-serif font-bold text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight mb-4 max-w-3xl">Fall 2026 Integrated<br /><span class="text-brand-dark">Mathematics Tournament</span></h1>
+      <p class="text-slate-400 max-w-xl text-base font-light leading-relaxed">Results from the Fall 2026 Integrated Mathematics Tournament.</p>
       <div class="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-sm text-slate-500 font-medium mt-6 pt-5 border-t border-slate-700/40">
-        <span>Round 1: September 26–October 10, 2026</span>
-        <span class="text-slate-700">·</span>
-        <span>Live Final: October 17, 2026</span>
+        <span><time datetime="2026-09-26">September 26</time> to <time datetime="2026-10-17">October 17, 2026</time></span><span class="text-slate-700" aria-hidden="true">·</span>
+        <span>{archive.registeredCompetitors}+ Registered Competitors</span><span class="text-slate-700" aria-hidden="true">·</span>
+        <span>{archive.countryCount}+ Countries</span><span class="text-slate-700" aria-hidden="true">·</span>
+        <span>{archive.rounds.length} Rounds</span><span class="text-slate-700" aria-hidden="true">·</span><span>Online</span>
+        <a class="underline underline-offset-4" href="/competitions/fall-2026/rules">Format and rules</a>
       </div>
     </div>
   </section>
-
-  <!-- ══════════════════════════════════════════
-       TIMELINE
-  ══════════════════════════════════════════ -->
-  <section class="py-16 md:py-20 bg-white border-b border-gray-200">
+  <section id="global-reach" class="py-20 bg-white border-b border-gray-200 overflow-hidden" aria-labelledby="reach-heading">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-      <div class="mb-10 reveal-on-scroll border-l-4 border-brand-gold pl-5">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">At a glance</p>
-        <h2 class="font-serif font-bold text-3xl text-brand-dark">Competition Timeline</h2>
-      </div>
-
-      <div class="grid md:grid-cols-2 gap-6">
-        <div class="bg-brand-light border border-gray-200 border-t-4 border-t-brand-green p-7 rounded-xl reveal-on-scroll delay-100">
-          <p class="text-[11px] font-bold text-brand-green uppercase tracking-widest mb-3">Round 1 · Asynchronous</p>
-          <h3 class="font-serif font-bold text-2xl text-brand-dark mb-2">September 26–October 10, 2026</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Complete both sections anytime during the window. They can be taken separately.</p>
-        </div>
-        <div class="bg-brand-light border border-gray-200 border-t-4 border-t-brand-gold p-7 rounded-xl reveal-on-scroll delay-200">
-          <p class="text-[11px] font-bold text-brand-dark uppercase tracking-widest mb-3">Round 2 · Live Final</p>
-          <h3 class="font-serif font-bold text-2xl text-brand-dark mb-2">October 17, 2026</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">A live final for the top quarter of Round 1.</p>
-        </div>
+      <div class="text-center mb-10"><h2 id="reach-heading" class="font-serif font-bold text-3xl text-brand-dark mb-2">Global Reach</h2><p class="text-slate-500 text-base max-w-lg mx-auto">{archive.registeredCompetitors}+ registered competitors from {archive.countryCount}+ countries.</p></div>
+      <div class="w-full max-w-5xl mx-auto bg-slate-50 rounded-xl border border-gray-200 shadow-inner relative overflow-hidden"><img src="/fall-2026-world-map.svg" width="900" height="375" loading="lazy" decoding="async" alt="World map highlighting the 57 countries represented in Fall 2026 IMT registration." class="w-full h-auto" /></div>
+      <details class="mt-5 text-sm text-slate-600"><summary class="cursor-pointer font-semibold py-3">View the highlighted countries</summary><ol class="country-list">{archive.countries.map(country=><li>{country}</li>)}</ol></details>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-10 mt-10 pt-8 border-t border-gray-100">
+        <div class="text-center"><div class="font-serif font-bold text-4xl text-brand-dark mb-1">{archive.registeredCompetitors}+</div><div class="text-[11px] font-bold uppercase tracking-widest text-slate-400">Registered Competitors</div></div>
+        <div class="flex items-center gap-2 bg-brand-light border border-gray-200 rounded-full px-5 py-2.5 text-sm font-semibold text-brand-dark shadow-sm"><span class="w-2 h-2 rounded-full bg-brand-green" aria-hidden="true"></span>Participating regions</div>
+        <div class="text-center"><div class="font-serif font-bold text-4xl text-brand-dark mb-1">{archive.countryCount}+</div><div class="text-[11px] font-bold uppercase tracking-widest text-slate-400">Countries</div></div>
       </div>
     </div>
   </section>
-
-  <!-- ══════════════════════════════════════════
-       ROUND 1
-  ══════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 bg-brand-light border-b border-gray-200">
+  <section id="results" class="py-20 bg-brand-light border-b border-gray-200" aria-labelledby="results-heading">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-12 reveal-on-scroll">
-        <div>
-          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Qualifying Round</p>
-          <h2 class="font-serif font-bold text-3xl md:text-4xl text-brand-dark">Round 1</h2>
-        </div>
-        <p class="text-slate-500 text-sm max-w-md leading-relaxed md:text-right">Each section counts for half of your Round 1 score: <span class="font-bold text-brand-dark">50% computational, 50% proof.</span></p>
+      <div class="mb-12 border-l-4 border-brand-gold pl-5"><h2 id="results-heading" class="font-serif font-bold text-3xl text-brand-dark mb-1">Top Scorers</h2><p class="text-slate-500 text-sm">Overall placements and recognition in each round.</p></div>
+      <div class="grid md:grid-cols-3 gap-8 mb-12">
+        {placements.map((group,index)=><section class="min-w-0 bg-white border border-gray-200 p-8 rounded-xl shadow-sm" aria-labelledby={`placement-${index}-heading`}>
+          <h3 id={`placement-${index}-heading`} class="text-sm font-bold text-brand-dark uppercase tracking-wider mb-5 pb-3 border-b border-gray-100">{group.title}</h3>
+          <ol class="archive-placement-list space-y-4" aria-label={group.title}>{group.names.map((name,place)=><li class="flex items-start gap-3 pb-3 border-b border-gray-50 last:border-0 last:pb-0"><span class={`font-black text-sm w-4 text-right shrink-0 ${place===0?'text-brand-gold':'text-slate-300'}`} aria-hidden="true">{place+1}.</span><span class="font-semibold text-brand-dark">{name}</span></li>)}</ol>
+        </section>)}
       </div>
-
-      <div class="grid md:grid-cols-2 gap-6">
-        <article class="bg-white border border-gray-200 border-t-4 border-t-brand-green p-7 md:p-8 rounded-xl shadow-sm reveal-on-scroll delay-100">
-          <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-gray-100">
-            <h3 class="font-serif font-bold text-2xl text-brand-dark">Computational Section</h3>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-brand-green bg-brand-green/10 rounded-full px-3 py-1.5">50%</span>
-          </div>
-          <div class="grid grid-cols-2 gap-4 mb-6">
-            <div><p class="text-2xl font-serif font-bold text-brand-dark">20</p><p class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">Problems</p></div>
-            <div><p class="text-2xl font-serif font-bold text-brand-dark">3 hours</p><p class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">Time limit</p></div>
-          </div>
-          <ul class="space-y-3 text-sm text-slate-500 leading-relaxed">
-            <li class="flex gap-3"><span class="text-brand-green font-bold">•</span><span>20 integer-answer problems; enter the extraction requested in each statement.</span></li>
-            <li class="flex gap-3"><span class="text-brand-green font-bold">•</span><span>Problems get harder throughout.</span></li>
-            <li class="flex gap-3"><span class="text-brand-green font-bold">•</span><span>Difficulty describes the ideas involved, not expected solving time.</span></li>
-          </ul>
-        </article>
-
-        <article class="bg-white border border-gray-200 border-t-4 border-t-brand-gold p-7 md:p-8 rounded-xl shadow-sm reveal-on-scroll delay-200">
-          <div class="flex flex-wrap items-center justify-between gap-3 mb-6 pb-4 border-b border-gray-100">
-            <h3 class="font-serif font-bold text-2xl text-brand-dark">Proof Section</h3>
-            <span class="text-[10px] font-bold uppercase tracking-widest text-brand-dark bg-brand-gold/20 rounded-full px-3 py-1.5">50%</span>
-          </div>
-          <div class="grid grid-cols-2 gap-4 mb-6">
-            <div><p class="text-2xl font-serif font-bold text-brand-dark">5</p><p class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">Problems</p></div>
-            <div><p class="text-2xl font-serif font-bold text-brand-dark">4.5 hours</p><p class="text-[11px] uppercase tracking-widest text-slate-400 font-bold">Time limit</p></div>
-          </div>
-          <ul class="space-y-3 text-sm text-slate-500 leading-relaxed">
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">•</span><span>Full written proofs are required; partial credit may be awarded.</span></li>
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">•</span><span>Five proofs, ordered by difficulty.</span></li>
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">•</span><span>Each problem is scored out of 7 points.</span></li>
-          </ul>
-        </article>
-      </div>
+      <div class="honorable-mentions"><h3 class="font-serif font-bold text-xl text-brand-dark mb-6 pb-3 border-b border-gray-200">Honorable Mentions</h3><div class="grid md:grid-cols-2 gap-5">
+        {archive.rounds.map((round,index)=><section class="min-w-0 bg-white border border-gray-200 p-6 rounded-lg shadow-sm" aria-labelledby={`honorable-${index}-heading`}><h4 id={`honorable-${index}-heading`} class="text-[11px] font-bold text-brand-dark uppercase tracking-widest mb-3 pb-2 border-b border-gray-100">{round.title}</h4><ul class="space-y-2 text-sm font-medium text-brand-dark">{round.honorableMentions.map(name=><li>{name}</li>)}</ul></section>)}
+      </div></div>
     </div>
   </section>
-
-  <!-- ══════════════════════════════════════════
-       DIFFICULTY AT A GLANCE
-  ══════════════════════════════════════════ -->
-  <section class="py-16 md:py-20 bg-white border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-      <div class="mb-10 reveal-on-scroll">
-        <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">What to expect</p>
-        <h2 class="font-serif font-bold text-3xl md:text-4xl text-brand-dark">Difficulty</h2>
+  <section id="resources" class="archive-section resources-section" aria-labelledby="resources-heading">
+    <div class="site-container">
+      <div class="archive-section-heading"><h2 id="resources-heading">Resource Archive</h2><p>Problems and solutions will be added here.</p></div>
+      <div class="archive-resource-grid">
+        {resources.map(resource=><article class="archive-resource"><h3>{resource.title}</h3><div class="resource-files">
+          {resource.problems?<a class="button-secondary" href={resource.problems} target="_blank" rel="noopener">Problems PDF</a>:<div class="pending-file"><span>Problems PDF</span><small>Not yet available</small></div>}
+          {resource.solutions?<a class="button-primary" href={resource.solutions} target="_blank" rel="noopener">Solutions PDF</a>:<div class="pending-file"><span>Solutions PDF</span><small>Not yet available</small></div>}
+        </div></article>)}
       </div>
-
-      <div class="grid md:grid-cols-2 gap-6">
-        <article class="bg-brand-light border border-gray-200 border-l-4 border-l-brand-green p-7 rounded-r-xl reveal-on-scroll delay-100">
-          <h3 class="font-serif font-bold text-2xl text-brand-dark mb-3">Computational</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">The early problems are around AMC 10/12 level. The round gets much harder as it goes, moving through AIME and into olympiad-level ideas.</p>
-        </article>
-        <article class="bg-brand-light border border-gray-200 border-l-4 border-l-brand-gold p-7 rounded-r-xl reveal-on-scroll delay-200">
-          <h3 class="font-serif font-bold text-2xl text-brand-dark mb-3">Proof</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">The proof section starts with approachable AIME-level ideas and builds toward national and international olympiad problems.</p>
-        </article>
-      </div>
-      <p class="mt-5 text-xs text-slate-400 leading-relaxed">These labels describe content, not time.</p>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════
-       ADVANCEMENT + RECOGNITION
-  ══════════════════════════════════════════ -->
-  <section class="py-16 md:py-20 bg-brand-light border-b border-gray-200">
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-      <div class="grid md:grid-cols-2 gap-8">
-        <div class="bg-white border border-gray-200 border-l-4 border-l-brand-green p-7 md:p-8 rounded-r-xl reveal-on-scroll">
-          <p class="text-[11px] font-bold text-brand-green uppercase tracking-widest mb-3">Advancement</p>
-          <h2 class="font-serif font-bold text-3xl text-brand-dark mb-3">The top quarter advances</h2>
-          <p class="text-slate-500 text-sm leading-relaxed">About one in four Round 1 competitors will qualify for the live final. The cutoff depends on participation and scores.</p>
-        </div>
-        <div class="bg-white border border-gray-200 border-l-4 border-l-brand-gold p-7 md:p-8 rounded-r-xl reveal-on-scroll delay-100">
-          <p class="text-[11px] font-bold text-brand-dark uppercase tracking-widest mb-3">Round 1 recognition</p>
-          <h2 class="font-serif font-bold text-3xl text-brand-dark mb-3">Top 3 + Honorable Mentions</h2>
-          <p class="text-slate-500 text-sm leading-relaxed">The top three receive awards; nearby scores earn Honorable Mentions. These awards are separate from the live final.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════
-       LIVE FINAL
-  ══════════════════════════════════════════ -->
-  <section class="py-16 md:py-24 bg-brand-dark text-brand-light border-b-4 border-brand-green">
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5 mb-12 reveal-on-scroll">
-        <div>
-          <p class="text-[11px] font-bold text-brand-gold uppercase tracking-widest mb-2">October 17, 2026</p>
-          <h2 class="font-serif font-bold text-3xl md:text-4xl text-white">Round 2 · Live Final</h2>
-        </div>
-        <span class="inline-flex self-start md:self-auto items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-brand-gold border border-brand-gold/40 rounded-full px-3 py-1.5">Live format</span>
-      </div>
-
-      <div class="grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] gap-8 items-start">
-        <div class="bg-white/[0.05] border border-white/10 rounded-xl p-7 md:p-8 reveal-on-scroll delay-100">
-          <p class="text-lg text-slate-200 font-light leading-relaxed mb-7">The individual final has 10 integer-answer problems, opened one at a time by an organizer. Competitors submit answers live, so <span class="text-white font-semibold">correctness and speed both matter.</span></p>
-          <div class="grid sm:grid-cols-2 gap-4">
-            <div class="border border-white/10 rounded-lg p-4"><p class="text-brand-gold font-serif font-bold text-2xl">10, 8, 6, 4</p><p class="text-xs text-slate-400 mt-1">The first correct answer earns 10 base points, followed by 8 and 6. Every later correct answer earns 4 base points.</p></div>
-            <div class="border border-white/10 rounded-lg p-4"><p class="text-brand-gold font-serif font-bold text-2xl">8 min</p><p class="text-xs text-slate-400 mt-1">Time limit for each problem. An organizer can end a question early.</p></div>
-          </div>
-        </div>
-
-        <div class="border border-white/10 rounded-xl p-7 md:p-8 reveal-on-scroll delay-200">
-          <h3 class="font-bold text-sm text-white uppercase tracking-wider mb-5 pb-3 border-b border-white/10">How scoring works</h3>
-          <ul class="space-y-4 text-sm text-slate-300 leading-relaxed">
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">01</span><span>Correct submissions are rewarded in server acceptance order: 10, 8, 6, then 4 base points for every later correct answer.</span></li>
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">02</span><span>Each incorrect submission deducts 2 points from that problem’s award, down to a minimum of 0. An unsolved problem earns 0.</span></li>
-            <li class="flex gap-3"><span class="text-brand-gold font-bold">03</span><span>You can submit another answer after an incorrect submission while the question is open.</span></li>
-          </ul>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- ══════════════════════════════════════════
-       AWARDS + CTA
-  ══════════════════════════════════════════ -->
-  <section class="py-16 md:py-20 bg-white">
-    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
-      <div class="grid md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] gap-10 items-start">
-        <div class="reveal-on-scroll">
-          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Live final recognition</p>
-          <h2 class="font-serif font-bold text-3xl md:text-4xl text-brand-dark mb-3">Final Awards</h2>
-          <p class="text-slate-500 text-sm leading-relaxed">The top three final scores receive awards.</p>
-        </div>
-        <div class="grid sm:grid-cols-3 gap-4 reveal-on-scroll delay-100">
-          <div class="bg-brand-light border border-gray-200 border-t-4 border-t-brand-gold rounded-lg p-5"><p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-2">1st Place</p><p class="font-serif font-bold text-xl text-brand-dark">Champion</p></div>
-          <div class="bg-brand-light border border-gray-200 border-t-4 border-t-slate-300 rounded-lg p-5"><p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-2">2nd Place</p><p class="font-serif font-bold text-xl text-brand-dark">Runner-up</p></div>
-          <div class="bg-brand-light border border-gray-200 border-t-4 border-t-brand-green rounded-lg p-5"><p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-2">3rd Place</p><p class="font-serif font-bold text-xl text-brand-dark">Third</p></div>
-          <div class="sm:col-span-3 bg-brand-light border border-gray-200 rounded-lg p-5"><p class="text-[11px] text-slate-400 font-bold uppercase tracking-widest mb-2">Additional distinction</p><p class="text-sm text-slate-600">Fourth and fifth place receive Honorable Mentions.</p></div>
-        </div>
-      </div>
-
-      <div class="mt-14 pt-8 border-t border-gray-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 reveal-on-scroll">
-        <p class="text-sm font-semibold text-brand-dark">See the portal for available rounds and your contest status.</p>
-        <a href="/test-portal" class="shrink-0 inline-block bg-brand-dark text-brand-gold font-bold py-3 px-7 rounded hover:bg-[#1e3152] transition-colors duration-150 btn-lift text-sm">Enter the tournament portal</a>
-      </div>
+      <div class="archive-statistics"><div><h3>Statistics Report</h3><p>Detailed score and problem statistics.</p></div>{statistics?<a class="button-secondary" href={statistics} target="_blank" rel="noopener">Download statistics PDF</a>:<span class="statistics-pending">Not yet available</span>}</div>
     </div>
   </section>
 </Layout>
+<style>
+  [id] { scroll-margin-top:7rem; }
+  .archive-section { padding-block:clamp(2.75rem,6vw,4.5rem); border-top:1px solid var(--line); }
+  .archive-section-heading { margin-bottom:2rem; }
+  .resources-section h2 { font-size:clamp(1.8rem,3vw,2.4rem); font-weight:750; line-height:1.2; letter-spacing:-.025em; }
+  .archive-section-heading p { color:var(--muted); line-height:1.7; margin-top:.65rem; }
+  .resources-section { background:white; }
+  .country-list { columns:3; column-gap:2.5rem; padding-left:1.5rem; margin-top:.75rem; line-height:1.9; }
+  .country-list li { break-inside:avoid; padding-left:.2rem; }
+  .resources-section h3 { font-size:1.35rem; font-weight:700; line-height:1.4; }
+  .archive-resource-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border:1px solid var(--line); }
+  .archive-resource { padding:1.5rem; min-width:0; }
+  .archive-resource + .archive-resource { border-left:1px solid var(--line); }
+  .archive-resource h3 { font-size:1.05rem; margin-bottom:1.25rem; }
+  .resource-files { display:grid; gap:.75rem; }
+  .pending-file { padding:.8rem 1rem; border:1px solid var(--line); background:var(--paper); }
+  .pending-file span { display:block; font-weight:650; font-size:.9rem; }
+  .pending-file small { display:block; color:var(--muted); font-size:.8rem; margin-top:.25rem; }
+  .archive-statistics { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1.5rem; padding-top:2rem; margin-top:2rem; border-top:1px solid var(--line); }
+  .archive-statistics h3 { font-size:1.15rem; }
+  .archive-statistics p { font-size:.9rem; color:var(--muted); line-height:1.7; margin-top:.35rem; }
+  .statistics-pending { font-size:.85rem; color:var(--muted); border:1px solid var(--line); padding:.7rem 1rem; background:var(--paper); }
+  @media(max-width:800px) { .archive-resource-grid { grid-template-columns:1fr; } .archive-resource + .archive-resource { border-left:0; border-top:1px solid var(--line); } .country-list { columns:2; } }
+  @media(max-width:380px) { .country-list { columns:1; } }
+</style>

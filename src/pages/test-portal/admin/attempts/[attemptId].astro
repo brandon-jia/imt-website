@@ -431,7 +431,7 @@ const { attemptId } = Astro.params;
 
   async function loadAttempt() {
     const session = await getPortalSession();
-    if (!session) { location.href = '/test-portal'; return; }
+    if (!session) { location.href = '/test-portal/admin/login?next=' + encodeURIComponent(location.pathname + location.search); return; }
     try {
       data = await portalFetch<ReviewPayload>(`/api/test-portal/admin/attempts/${attemptId}`);
       renderPage();

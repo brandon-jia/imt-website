@@ -1,4 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
+import { closedPortalRoute, PORTAL_CLOSED_MESSAGE } from './lib/portalAccess';
 
 const productionDirectives = import.meta.env.PROD ? ['upgrade-insecure-requests'] : [];
 function contentSecurityPolicy(pathname: string) {
@@ -22,7 +23,10 @@ function contentSecurityPolicy(pathname: string) {
 }
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const response = await next();
+  const closure = closedPortalRoute(context.url.pathname);
+  const response = closure === 'api'
+    ? new Response(JSON.stringify({ error:PORTAL_CLOSED_MESSAGE,code:'PORTAL_CLOSED' }), { status:403,headers:{'Content-Type':'application/json; charset=utf-8'} })
+    : closure === 'page' ? await context.rewrite('/test-portal/closed') : await next();
   const headers = new Headers(response.headers);
   if (['/test-portal', '/api/', '/learn/diagnostic', '/account'].some((path) => context.url.pathname.startsWith(path))) {
     headers.set('Cache-Control', 'no-store, private');

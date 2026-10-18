@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import mathStyles from 'katex/dist/katex.min.css?url';
+import { PARTICIPANT_PORTAL_OPEN } from '../lib/portalAccess';
 
 export interface Props {
   title: string;
@@ -17,7 +18,7 @@ const path = Astro.url.pathname;
 const canonical = new URL(path === '/' ? '/' : path.replace(/\/+$/, ''), Astro.site);
 const pageTitle = `${title} | Integrated Math`;
 const noindex = Astro.props.noindex || ['/test-portal', '/account', '/404', '/portal', '/learn/diagnostic/session/', '/learn/diagnostic/report/'].some(prefix => path.startsWith(prefix));
-const parents = path.startsWith('/competitions/') ? [{ href: '/competitions', label: 'Competitions' }]
+const parents = path.startsWith('/competitions/') ? [{ href: '/competitions', label: 'Competitions' }, ...(path.startsWith('/competitions/fall-2026/') ? [{ href:'/competitions/fall-2026',label:'Fall 2026 archive' }] : [])]
   : path.startsWith('/learn/diagnostic') ? [{ href: '/learn', label: 'Learn' }, ...(path !== '/learn/diagnostic' ? [{ href: '/learn/diagnostic', label: 'Diagnostic' }] : [])]
   : path.startsWith('/test-portal/') ? [{ href: '/test-portal', label: 'Contest portal' }] : [];
 const breadcrumbs = [{ href: '/', label: 'Home' }, ...parents, { href: path, label: title }];
@@ -31,7 +32,7 @@ const schema = {
   ],
 };
 const navItems = [
-  { href: '/test-portal', label: 'Contest portal' },
+  ...(PARTICIPANT_PORTAL_OPEN ? [{ href: '/test-portal', label: 'Contest portal' }] : []),
   { href: '/competitions', label: 'Competitions' },
   { href: '/learn', label: 'Learn' },
   { href: '/sponsors', label: 'Sponsors' },
@@ -74,8 +75,8 @@ const navItems = [
 
     <div class="announcement">
       <div class="site-container announcement-inner">
-        <span><strong>Fall 2026:</strong> Round 1, Sep 26–Oct 10. Live final, Oct 17.</span>
-        <a href="/test-portal">Contest portal</a>
+        <span><strong>Fall 2026:</strong> Results are now available.</span>
+        <a href="/competitions/fall-2026">View the archive</a>
       </div>
     </div>
 
@@ -95,7 +96,7 @@ const navItems = [
               {item.label}
             </a>
           ))}
-          <a class="register-link" href="/test-portal">Register</a>
+          <a class="register-link" href="/register">Email updates</a>
         </nav>
 
         <button id="mobile-menu-btn" class="menu-button" type="button" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
@@ -106,7 +107,7 @@ const navItems = [
       <nav id="mobile-menu" class="mobile-nav" aria-label="Mobile navigation" hidden>
         <div class="site-container">
           {navItems.map(item => <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>)}
-          <a href="/test-portal">Register</a>
+          <a href="/register">Email updates</a>
         </div>
       </nav>
     </header>
@@ -254,7 +255,7 @@ const navItems = [
 
   .desktop-nav .register-link {
     border-left: 1px solid var(--line);
-    padding: 0.55rem 0 0.55rem 1.7rem;
+    padding: 0.4rem 0 0.4rem 1rem;
     color: var(--ink);
   }
 

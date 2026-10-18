@@ -118,7 +118,7 @@ const { testId } = Astro.params;
 
   async function init() {
     const session = await getPortalSession();
-    if (!session) { location.href = '/test-portal'; return; }
+    if (!session) { location.href = '/test-portal/admin/login?next=' + encodeURIComponent(location.pathname + location.search); return; }
     try {
       const data = await portalFetch<PreviewPayload>(`/api/test-portal/admin/tests/${testId}/preview`);
       renderPreview(data);

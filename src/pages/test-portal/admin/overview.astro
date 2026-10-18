@@ -33,7 +33,7 @@ import Layout from '../../../layouts/Layout.astro';
   async function refresh() {
     const button = document.getElementById('refresh') as HTMLButtonElement; button.disabled = true;
     try {
-      if (!await getPortalSession()) { location.href = '/test-portal?next='+encodeURIComponent(location.pathname); return; }
+      if (!await getPortalSession()) { location.href = '/test-portal/admin/login?next='+encodeURIComponent(location.pathname); return; }
       report = await portalFetch<Report>('/api/test-portal/admin/overview');
       status.textContent = `${report.scheduler_healthy ? 'Automatic submission worker is healthy.' : 'Action needed: automatic submission worker has no recent heartbeat. Check Supabase Cron.'} Last run: ${formatPortalDate(report.health?.last_run_at)}. Overdue attempts: ${report.overdue_attempts}.`;
       status.className = `rounded-xl border p-5 mb-6 ${report.scheduler_healthy && !report.overdue_attempts ? 'bg-green-50 border-green-200' : 'bg-amber-50 border-amber-200'}`;

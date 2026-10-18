@@ -1,0 +1,76 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+---
+<Layout title="Administrator Sign-in" description="Sign in to manage Integrated Math competitions." noindex>
+  <section class="admin-login">
+    <a href="/competitions">← Competition archives</a>
+    <h1>Administrator sign-in</h1>
+    <p>Sign in with your administrator account to manage tests and review results.</p>
+    <form id="admin-login-form">
+      <label for="admin-email">Email address</label>
+      <input id="admin-email" type="email" autocomplete="username" required />
+      <label for="admin-password">Password</label>
+      <input id="admin-password" type="password" autocomplete="current-password" required />
+      <button type="submit" class="button-primary">Sign in</button>
+    </form>
+    <p id="login-message" role="status" aria-live="polite"></p>
+    <p class="help">For account assistance, contact <a href="mailto:info@integratedmath.org">info@integratedmath.org</a>.</p>
+  </section>
+</Layout>
+<style>
+  .admin-login{max-width:36rem;margin:0 auto;padding:4rem 1.5rem 6rem}
+  h1{font-size:clamp(2rem,5vw,3rem);margin:2rem 0 1rem;line-height:1.15}
+  form{display:grid;gap:.75rem;margin-top:2rem}
+  label{font-weight:700;margin-top:.5rem}
+  input{width:100%;padding:.8rem;border:1px solid #72827a;background:white;border-radius:.25rem}
+  button{margin-top:1rem;justify-self:start}
+  button:disabled{opacity:.6;cursor:wait}
+  #login-message{margin-top:1.25rem}
+  #login-message[data-error="true"]{color:#a51d24}
+  .help{font-size:.9rem;margin-top:2rem}
+</style>
+<script>
+  import { supabase, isBackendConfigured } from '../../../lib/supabase.js';
+  import { getPortalSession, portalFetch } from '../../../lib/testPortalClient';
+  import { adminReturnPath } from '../../../lib/portalAccess';
+
+  const form = document.querySelector<HTMLFormElement>('#admin-login-form')!;
+  const button = form.querySelector<HTMLButtonElement>('button')!;
+  const message = document.getElementById('login-message')!;
+  const destination = adminReturnPath(new URLSearchParams(location.search).get('next'));
+  function showMessage(text: string, error = false) {
+    message.textContent = text;
+    message.dataset.error = String(error);
+  }
+  async function enterWorkspace() {
+    const account = await portalFetch<{is_admin:boolean}>('/api/test-portal/me');
+    if (!account.is_admin) throw new Error('This account does not have administrator access.');
+    location.replace(destination);
+  }
+  if (!isBackendConfigured) {
+    form.querySelectorAll<HTMLInputElement | HTMLButtonElement>('input,button').forEach(input => input.disabled = true);
+    showMessage('Administrator sign-in is unavailable in this local preview.');
+  } else {
+    button.disabled = true;
+    try { if (await getPortalSession()) await enterWorkspace(); }
+    catch { showMessage('Please sign in with an administrator account.'); }
+    finally { button.disabled = false; }
+  }
+  form.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!isBackendConfigured) return;
+    button.disabled = true;
+    showMessage('Signing in…');
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: (document.getElementById('admin-email') as HTMLInputElement).value.trim(),
+        password: (document.getElementById('admin-password') as HTMLInputElement).value,
+      });
+      if (error) throw error;
+      try { await enterWorkspace(); }
+      catch (error) { await supabase.auth.signOut({scope:'local'}); throw error; }
+    } catch(error) {
+      showMessage(error instanceof Error ? error.message : 'Sign-in failed. Please try again.', true);
+    } finally { button.disabled = false; }
+  });
+</script>

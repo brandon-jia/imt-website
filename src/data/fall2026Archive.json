@@ -1,0 +1,26 @@
+{
+  "registeredCompetitors": 440,
+  "countryCount": 57,
+  "countries": [
+    "Algeria", "Australia", "Azerbaijan", "Bangladesh", "Belgium", "Bolivia", "Brazil", "Bulgaria", "Canada", "China", "DR Congo", "Egypt", "Ethiopia", "Finland", "France", "Ghana", "Greece", "Guinea", "India", "Indonesia", "Iran", "Iraq", "Kazakhstan", "Kenya", "Kyrgyzstan", "Lebanon", "Libya", "Lithuania", "Malaysia", "Mexico", "Mongolia", "Montenegro", "Morocco", "Myanmar", "Nepal", "New Zealand", "Nigeria", "Pakistan", "Peru", "Philippines", "Portugal", "Russia", "Rwanda", "Saudi Arabia", "South Africa", "Spain", "Sri Lanka", "Thailand", "Togo", "Tunisia", "Turkey", "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Uzbekistan", "Vietnam"
+  ],
+  "overall": ["Muhammad Salman Khan", "Ritesh Kumar Mohapatra", "Anonymous competitor", "Renish J.", "Caleb Ato Tetteh"],
+  "rounds": [
+    {
+      "title": "Round 1",
+      "topScorers": ["Muhammad Salman Khan", "Patience Mauza", "Renish J.", "Ritesh Kumar Mohapatra", "Anonymous competitor"],
+      "honorableMentions": ["Brandon Ni", "Tejas Singhal", "Batool Moein Ali", "Caleb Ato Tetteh", "Ibrahim Hamdi"]
+    },
+    {
+      "title": "Round 2",
+      "topScorers": ["Srija Reddy Sadda", "Himesh Neupande", "Christopher Boateng", "Ojugbele Paul Segun", "Shreya Gupta"],
+      "honorableMentions": ["Renish J.", "Muhammad Taimoor Ya", "Ritesh Kumar Mohapatra", "Evgeniia Imaeva", "Muhammad Arham", "Vaidik Kumar", "S.M. Ashraful Islam Apu", "Anonymous competitor"]
+    }
+  ],
+  "resources": [
+    { "title": "Round 1: Computational", "problems": null, "solutions": null },
+    { "title": "Round 1: Proof", "problems": null, "solutions": null },
+    { "title": "Round 2: Final", "problems": null, "solutions": null }
+  ],
+  "statistics": null
+}

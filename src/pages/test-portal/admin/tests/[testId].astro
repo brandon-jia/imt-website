@@ -573,7 +573,7 @@ const { testId } = Astro.params;
 
   async function loadEditor() {
     const session = await getPortalSession();
-    if (!session) { location.href = '/test-portal'; return; }
+    if (!session) { location.href = '/test-portal/admin/login?next=' + encodeURIComponent(location.pathname + location.search); return; }
     try {
       const data = await portalFetch<{ test: EditorTest; questions: EditorQuestion[]; attempt_count: number }>(`/api/test-portal/admin/tests/${testId}`);
       test = data.test;

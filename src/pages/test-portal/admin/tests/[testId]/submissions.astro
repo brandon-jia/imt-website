@@ -171,7 +171,7 @@ const { testId } = Astro.params;
 
   async function init() {
     const session = await getPortalSession();
-    if (!session) { location.href = '/test-portal'; return; }
+    if (!session) { location.href = '/test-portal/admin/login?next=' + encodeURIComponent(location.pathname + location.search); return; }
     try {
       data = await portalFetch<SubmissionPayload>(`/api/test-portal/admin/tests/${testId}/attempts`);
       document.title = `${data.test.title} Submissions | Integrated Math`;

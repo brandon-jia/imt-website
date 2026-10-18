@@ -19,6 +19,7 @@ import Layout from '../../../layouts/Layout.astro';
           <a href="/test-portal/admin/activity" class="border border-white/20 text-white font-bold rounded-lg px-5 py-3 text-sm hover:border-brand-gold hover:text-brand-gold transition">Activity</a>
           <a href="/test-portal/admin/access" class="border border-white/20 text-white font-bold rounded-lg px-5 py-3 text-sm hover:border-brand-gold hover:text-brand-gold transition">Administrators</a>
           <button id="new-test-button" type="button" class="bg-brand-gold text-brand-dark font-extrabold rounded-lg px-6 py-3 hover:bg-yellow-300 transition">Create test</button>
+          <button id="admin-sign-out" type="button" class="border border-white/20 rounded-lg px-5 py-3 text-sm font-bold">Sign out</button>
         </div>
       </div>
     </div>
@@ -78,7 +79,13 @@ import Layout from '../../../layouts/Layout.astro';
 </style>
 
 <script>
-  import { escapeHtml, formatPortalDate, formatPortalDuration, getPortalSession, portalFetch } from '../../../lib/testPortalClient';
+  import { escapeHtml, formatPortalDate, formatPortalDuration, getPortalSession, portalFetch, supabase } from '../../../lib/testPortalClient';
+
+  document.getElementById('admin-sign-out')!.addEventListener('click', async () => {
+    const { error } = await supabase.auth.signOut({scope:'local'});
+    if (error) { showError(error.message); return; }
+    location.href = '/test-portal/admin/login';
+  });
 
   interface AdminTest {
     id: string;
@@ -181,7 +188,7 @@ import Layout from '../../../layouts/Layout.astro';
     try {
       const session = await getPortalSession();
       if (!session) {
-        location.href = '/test-portal';
+        location.href = '/test-portal/admin/login?next=' + encodeURIComponent(location.pathname + location.search);
         return;
       }
       const data = await portalFetch<{ tests: AdminTest[] }>('/api/test-portal/admin/tests');

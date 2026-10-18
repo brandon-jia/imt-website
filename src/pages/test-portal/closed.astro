@@ -1,0 +1,15 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+<Layout title="Competition Concluded" description="The Fall 2026 IMT rounds have ended. View the official results and tournament archive." noindex>
+  <section class="site-container closed-portal">
+    <h1 class="page-title">The competition has concluded.</h1>
+    <p class="lede">The Fall 2026 rounds have ended, and the testing portal is closed to participants.</p>
+    <div class="closed-actions"><a class="button-primary" href="/competitions/fall-2026">View Fall 2026 results</a><a class="button-secondary" href="/competitions">Tournament archives</a></div>
+  </section>
+</Layout>
+<style>
+  .closed-portal { padding-block:clamp(3rem,8vw,6rem); min-height:45vh; }
+  h1 { max-width:850px; } .lede { max-width:660px; }
+  .closed-actions { display:flex; flex-wrap:wrap; gap:.85rem; margin-top:2rem; }
+</style>

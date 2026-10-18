@@ -1,4 +1,4 @@
-import { getPortalSession, PortalClientError } from './testPortalClient';
+import { adminSignIn, getPortalSession, PortalClientError } from './testPortalClient';
 export const isFinalDemo = document.body.dataset.finalDemo === 'true';
 export const finalDemoUser = document.body.dataset.finalDemoUser || '';
 let boundAccount: string | undefined;
@@ -11,7 +11,7 @@ export async function finalRequest<T>(admin: boolean, body?: Record<string, unkn
     headers.set('X-Final-Demo-User',finalDemoUser);
   } else {
     const session=await getPortalSession();
-    if(!session?.access_token)throw new PortalClientError(401,'AUTH_REQUIRED','Sign in to continue. Your unconfirmed answer will be kept.');
+    if(!session?.access_token){if(admin)adminSignIn();throw new PortalClientError(401,'AUTH_REQUIRED','Sign in to continue. Your unconfirmed answer will be kept.');}
     if(boundAccount&&boundAccount!==session.user.id)throw new PortalClientError(401,'FINAL_ACCOUNT_CHANGED','The signed-in account changed. Reload this page before continuing.');
     boundAccount=session.user.id;
     headers.set('Authorization',`Bearer ${session.access_token}`);
@@ -21,7 +21,7 @@ export async function finalRequest<T>(admin: boolean, body?: Record<string, unkn
   try {
     const response=await fetch(path,{method:body?'POST':'GET',...(body?{body:JSON.stringify(body)}:{}),headers,signal:controller.signal});
     const data=await response.json().catch(()=>({}));
-    if(!response.ok)throw new PortalClientError(response.status,data.code||'FINAL_REQUEST_FAILED',data.error||'The request failed. Please try again.');
+    if(!response.ok){if(admin&&response.status===401&&!isFinalDemo)adminSignIn();throw new PortalClientError(response.status,data.code||'FINAL_REQUEST_FAILED',data.error||'The request failed. Please try again.');}
     if(!data||typeof data!=='object'||!('server_now' in data||'state' in data))throw new Error('The response could not be confirmed. Please try again.');
     return data as T;
   } catch(error) {

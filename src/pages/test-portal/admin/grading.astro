@@ -131,7 +131,7 @@ import Layout from '../../../layouts/Layout.astro';
   window.addEventListener('beforeunload',(event) => { if (dirty) event.preventDefault(); });
   void (async () => {
     try {
-      if (!await getPortalSession()) { location.href = '/test-portal?next='+encodeURIComponent(location.pathname); return; }
+      if (!await getPortalSession()) { location.href = '/test-portal/admin/login?next='+encodeURIComponent(location.pathname); return; }
       const result = await portalFetch<{queue:Entry[]}>('/api/test-portal/admin/grading'); queue = result.queue.sort((a,b) => a.id.localeCompare(b.id)); await load(filtered()[0]);
     } catch (error) { status.textContent = error instanceof Error ? error.message : 'Could not load grading queue.'; }
   })();

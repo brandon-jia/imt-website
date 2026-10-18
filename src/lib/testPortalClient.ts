@@ -23,6 +23,14 @@ export async function getPortalSession() {
   return data.session;
 }
 
+export function adminSignIn() {
+  location.href = '/test-portal/admin/login?next=' + encodeURIComponent(location.pathname + location.search);
+}
+
+function redirectExpiredAdmin() {
+  if (location.pathname.startsWith('/test-portal/admin') && location.pathname !== '/test-portal/admin/login') adminSignIn();
+}
+
 export async function portalFetch<T = Record<string, unknown>>(
   path: string,
   options: RequestInit = {},
@@ -30,6 +38,7 @@ export async function portalFetch<T = Record<string, unknown>>(
 ): Promise<T> {
   const session = await getPortalSession();
   if (!session?.access_token) {
+    redirectExpiredAdmin();
     throw new PortalClientError(401, 'AUTH_REQUIRED', 'Please sign in to continue.');
   }
 
@@ -42,6 +51,7 @@ export async function portalFetch<T = Record<string, unknown>>(
   const response = await fetch(path, { ...options, headers });
   const payload = await response.json().catch(() => ({})) as Record<string, unknown>;
   if (!response.ok) {
+    if (response.status === 401) redirectExpiredAdmin();
     throw new PortalClientError(
       response.status,
       typeof payload.code === 'string' ? payload.code : 'REQUEST_FAILED',

@@ -1,6 +1,7 @@
 import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { createServerClient } from './supabaseServer';
 import { readBoundedText } from './requestBody';
+import { PARTICIPANT_PORTAL_OPEN, PORTAL_CLOSED_MESSAGE } from './portalAccess';
 
 export class PortalHttpError extends Error {
   status: number;
@@ -112,6 +113,9 @@ export async function authenticatePortalRequest(
   const isAdmin = Boolean(adminRow);
   if (options.admin && !isAdmin) {
     throw new PortalHttpError(403, 'ADMIN_REQUIRED', 'Test Portal administrator access is required.');
+  }
+  if (!PARTICIPANT_PORTAL_OPEN && !isAdmin) {
+    throw new PortalHttpError(403, 'PORTAL_CLOSED', PORTAL_CLOSED_MESSAGE);
   }
 
   const mutation = !['GET', 'HEAD', 'OPTIONS'].includes(request.method.toUpperCase());

@@ -77,7 +77,7 @@ import Layout from '../../../layouts/Layout.astro';
 
   async function loadActivity() {
     const session = await getPortalSession();
-    if (!session) { location.href = '/test-portal'; return; }
+    if (!session) { location.href = '/test-portal/admin/login?next=' + encodeURIComponent(location.pathname + location.search); return; }
     try {
       const result = await portalFetch<{ events: AuditEvent[] }>('/api/test-portal/admin/audit');
       events = result.events;

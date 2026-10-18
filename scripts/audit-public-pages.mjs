@@ -1,6 +1,6 @@
 import { writeFile, mkdir } from 'node:fs/promises';
 const base = process.env.LOCAL_PREVIEW_URL || 'http://127.0.0.1:4173';
-const pages = ['/', '/competitions', '/competitions/fall-2026', '/competitions/spring-2026', '/learn', '/learn/diagnostic', '/learn/diagnostic/how-it-works', '/sponsors', '/team', '/register', '/privacy', '/terms', '/cookies', '/test-portal'];
+const pages = ['/', '/competitions', '/competitions/fall-2026', '/competitions/fall-2026/rules', '/competitions/spring-2026', '/learn', '/learn/diagnostic', '/learn/diagnostic/how-it-works', '/sponsors', '/team', '/register', '/privacy', '/terms', '/cookies', '/test-portal'];
 const report = { pages: [], broken: [], missingAlt: [], missingAnchors: [], assets: [], externalLinks: [] };
 const resources = new Set();
 const external = new Set();
