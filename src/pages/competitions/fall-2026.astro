@@ -6,7 +6,7 @@ const statistics: string | null = archive.statistics;
 const placements = [{ title:'Overall Top Scorers',names:archive.overall },...archive.rounds.map(round=>({ title:`${round.title} Top Scorers`,names:round.topScorers }))];
 ---
 
-<Layout title="Fall 2026 Results and Archive" description="Official Fall 2026 IMT placements, honorable mentions, and participating countries. 440+ registered competitors from 57+ countries.">
+<Layout title="Fall 2026 Results and Archive" description="Fall 2026 Integrated Mathematics Tournament archive and participating countries. Rankings are temporarily unavailable.">
   <section class="bg-brand-dark text-brand-light border-b-4 border-brand-green">
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 pt-10 pb-16">
       <a href="/competitions" class="inline-flex items-center text-slate-400 hover:text-brand-gold transition-colors duration-150 text-sm font-medium mb-10 group">
@@ -36,7 +36,7 @@ const placements = [{ title:'Overall Top Scorers',names:archive.overall },...arc
       </div>
     </div>
   </section>
-  <section id="results" class="py-20 bg-brand-light border-b border-gray-200" aria-labelledby="results-heading">
+  <section id="results" class="py-20 bg-brand-light border-b border-gray-200" aria-labelledby="results-heading" hidden>
     <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
       <div class="mb-12 border-l-4 border-brand-gold pl-5"><h2 id="results-heading" class="font-serif font-bold text-3xl text-brand-dark mb-1">Top Scorers</h2><p class="text-slate-500 text-sm">Overall placements and recognition in each round.</p></div>
       <div class="grid md:grid-cols-3 gap-8 mb-12">
