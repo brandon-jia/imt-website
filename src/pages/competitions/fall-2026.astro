@@ -1,8 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import archive from '../../data/fall2026Archive.json';
-// Keep results available to restore without sending names in the public page.
-const showPlacements = false;
+const showPlacements = true;
 const resources: { title: string; problems: string | null; solutions: string | null }[] = archive.resources;
 const statistics: string | null = archive.statistics;
 const placements = [{ title:'Overall Top Scorers',names:archive.overall },...archive.rounds.map(round=>({ title:`${round.title} Top Scorers`,names:round.topScorers }))];
