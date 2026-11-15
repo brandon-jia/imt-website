@@ -1,0 +1,89 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { verifyCertificate } from '../lib/certificates.server';
+import { requireSameOrigin } from '../lib/requestGuards';
+
+export const prerender = false;
+
+Astro.response.headers.set('Cache-Control', 'no-store, private');
+Astro.response.headers.set('X-Robots-Tag', 'noindex, nofollow');
+
+let result: ReturnType<typeof verifyCertificate> | undefined;
+if (Astro.request.method === 'POST') {
+  const blocked = requireSameOrigin(Astro.request);
+  if (blocked) return blocked;
+
+  const contentType = Astro.request.headers.get('content-type')?.split(';')[0].trim();
+  if (contentType !== 'application/x-www-form-urlencoded') {
+    return new Response(null, { status: 415 });
+  }
+
+  const body = await Astro.request.text();
+  if (body.length > 256) return new Response(null, { status: 413 });
+
+  const codes = new URLSearchParams(body).getAll('code');
+  result = codes.length === 1 ? verifyCertificate(codes[0]) : { status: 'invalid' };
+  if (result.status === 'unavailable') Astro.response.status = 503;
+} else if (!['GET', 'HEAD'].includes(Astro.request.method)) {
+  return new Response(null, { status: 405, headers: { Allow: 'GET, HEAD, POST' } });
+}
+
+const certificate = result?.status === 'verified' ? result.certificate : undefined;
+const issuedDate = certificate && new Intl.DateTimeFormat('en-US', {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+}).format(new Date(certificate.issuedOn));
+
+const errors = {
+  invalid: 'Enter the 12-character code printed on the certificate.',
+  'not-found': 'No certificate matched that code. Check the code on the certificate and try again.',
+  unavailable: 'Certificate verification is temporarily unavailable. Please try again later.',
+};
+---
+
+<Layout title="Verify a Certificate" description="Verify a certificate issued by the Integrated Math Tournament." noindex>
+  <section class="verification-section section">
+    <div class="site-container verification-grid">
+      <div>
+        <h1 class="page-title">Verify a certificate</h1>
+        <p class="lede">Enter the code printed on your Fall 2026 Integrated Math Tournament certificate.</p>
+      </div>
+
+      <div class="verification-panel">
+        <form action="/verify-certificate" method="post" autocomplete="off">
+          <label for="certificate-code">Certificate code</label>
+          <input class="form-control" id="certificate-code" name="code" type="text" required maxlength="32" autocapitalize="characters" spellcheck="false" />
+          <button class="button-primary" type="submit">Verify certificate</button>
+        </form>
+
+        {certificate && (
+          <section class="verification-result" aria-labelledby="verification-result-title">
+            <h2 id="verification-result-title">Certificate verified</h2>
+            <dl>
+              <div><dt>Full name</dt><dd>{certificate.name}</dd></div>
+              <div><dt>Award</dt><dd>{certificate.award}</dd></div>
+              <div><dt>Date issued</dt><dd><time datetime={certificate.issuedOn}>{issuedDate}</time></dd></div>
+            </dl>
+          </section>
+        )}
+        {result && result.status !== 'verified' && <p class="verification-error" role="status">{errors[result.status]}</p>}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .verification-section { background: var(--paper); border-bottom: 1px solid var(--line); }
+  .verification-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); gap: clamp(2rem, 8vw, 7rem); align-items: start; }
+  .verification-panel { background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--green); padding: clamp(1.2rem, 3vw, 2rem); }
+  form { display: grid; gap: 0.75rem; }
+  label, dt { font-size: 0.78rem; font-weight: 750; }
+  input { font-family: ui-monospace, monospace; letter-spacing: 0.08em; }
+  .verification-result { border-top: 1px solid var(--line); margin-top: 1.5rem; padding-top: 1.25rem; }
+  .verification-result h2 { margin: 0; color: var(--green); font-size: 1.1rem; font-weight: 750; }
+  dl { display: grid; gap: 0.75rem; margin: 1rem 0 0; }
+  dt { color: var(--muted); }
+  dd { margin: 0.15rem 0 0; overflow-wrap: anywhere; }
+  .verification-error { margin: 1rem 0 0; color: #8b2c23; }
+  @media (max-width: 760px) { .verification-grid { grid-template-columns: 1fr; } }
+</style>
