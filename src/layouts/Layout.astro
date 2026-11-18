@@ -38,6 +38,7 @@ const navItems = [
   { href: '/sponsors', label: 'Sponsors' },
   { href: '/team', label: 'About' },
 ];
+const activeNavItem = (href: string) => path === href || path.startsWith(`${href}/`);
 ---
 
 <!DOCTYPE html>
@@ -70,7 +71,7 @@ const navItems = [
     <script type="application/ld+json" is:inline set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
   </head>
 
-  <body class="min-h-screen bg-brand-light text-brand-dark antialiased">
+  <body class="site-shell bg-brand-light text-brand-dark antialiased">
     <a class="skip-link" href="#main-content">Skip to content</a>
 
     <div class="announcement">
@@ -91,12 +92,12 @@ const navItems = [
           {navItems.map(item => (
             <a
               href={item.href}
-              aria-current={path.startsWith(item.href) ? 'page' : undefined}
+              aria-current={activeNavItem(item.href) ? 'page' : undefined}
             >
               {item.label}
             </a>
           ))}
-          <a class="register-link" href="/register">Email updates</a>
+          <a class="register-link" href="/register" aria-current={activeNavItem('/register') ? 'page' : undefined}>Email updates</a>
         </nav>
 
         <button id="mobile-menu-btn" class="menu-button" type="button" aria-label="Open menu" aria-controls="mobile-menu" aria-expanded="false">
@@ -106,8 +107,8 @@ const navItems = [
 
       <nav id="mobile-menu" class="mobile-nav" aria-label="Mobile navigation" hidden>
         <div class="site-container">
-          {navItems.map(item => <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>{item.label}</a>)}
-          <a href="/register">Email updates</a>
+          {navItems.map(item => <a href={item.href} aria-current={activeNavItem(item.href) ? 'page' : undefined}>{item.label}</a>)}
+          <a href="/register" aria-current={activeNavItem('/register') ? 'page' : undefined}>Email updates</a>
         </div>
       </nav>
     </header>
@@ -174,6 +175,14 @@ const navItems = [
 </script>
 
 <style is:global>
+  .site-shell {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  .site-shell > main { flex: 1; }
+
   .skip-link {
     position: fixed;
     left: 1rem;
@@ -194,7 +203,7 @@ const navItems = [
   }
 
   .announcement-inner {
-    min-height: 2.25rem;
+    min-height: 2.35rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -206,6 +215,8 @@ const navItems = [
     color: white;
     font-weight: 750;
     white-space: nowrap;
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 60%);
   }
 
   .site-header {
@@ -213,7 +224,8 @@ const navItems = [
     top: 0;
     z-index: 50;
     border-bottom: 1px solid var(--line);
-    background: var(--paper);
+    background: var(--white);
+    box-shadow: 0 2px 10px rgb(32 61 50 / 4%);
   }
 
   .header-inner {
@@ -241,22 +253,25 @@ const navItems = [
   .desktop-nav {
     display: flex;
     align-items: center;
-    gap: 1.7rem;
+    gap: 0.2rem;
   }
 
   .desktop-nav a {
-    color: #4f5b6d;
-    font-size: 0.84rem;
+    border-radius: var(--radius-control);
+    padding: 0.65rem 0.9rem;
+    color: var(--muted);
+    font-size: 0.88rem;
     font-weight: 650;
     text-decoration: none;
+    transition: background-color 150ms ease, color 150ms ease;
   }
 
   .desktop-nav a:hover,
-  .desktop-nav a[aria-current="page"] { color: var(--green); }
+  .desktop-nav a[aria-current="page"] { background: var(--wash); color: var(--ink); }
 
   .desktop-nav .register-link {
-    border-left: 1px solid var(--line);
-    padding: 0.4rem 0 0.4rem 1rem;
+    border: 1px solid var(--line);
+    margin-left: 0.65rem;
     color: var(--ink);
   }
 
@@ -264,10 +279,13 @@ const navItems = [
     display: none;
     width: 2.75rem;
     height: 2.75rem;
-    border: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
     background: transparent;
     padding: 0.7rem;
   }
+
+  .menu-button[aria-expanded="true"] { background: var(--wash); }
 
   .menu-button span {
     display: block;
@@ -278,7 +296,7 @@ const navItems = [
 
   .mobile-nav {
     border-top: 1px solid var(--line);
-    background: var(--paper);
+    background: var(--white);
   }
 
   .mobile-nav[hidden] { display: none; }
@@ -286,12 +304,14 @@ const navItems = [
   .mobile-nav a {
     display: block;
     border-bottom: 1px solid var(--soft-line);
-    padding: 0.85rem 0;
+    padding: 0.85rem 0.75rem;
     color: var(--ink);
     font-size: 0.95rem;
     font-weight: 650;
     text-decoration: none;
   }
+
+  .mobile-nav a[aria-current="page"] { background: var(--wash); }
 
   .site-footer {
     border-top: 1px solid #2d3934;
@@ -317,7 +337,7 @@ const navItems = [
   .footer-main p {
     max-width: 430px;
     margin: 0.8rem 0 0;
-    color: #9aa4b3;
+    color: #bdc9c1;
     font-size: 0.88rem;
     line-height: 1.6;
   }
@@ -343,7 +363,7 @@ const navItems = [
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    border-top: 1px solid #303b36;
+    border-top: 1px solid rgb(255 255 255 / 15%);
     padding-block: 1rem;
     color: #bac6bf;
     font-size: 0.75rem;
@@ -356,9 +376,10 @@ const navItems = [
   }
 
   @media (max-width: 620px) {
-    .announcement-inner { justify-content: flex-start; text-align: left; flex-wrap: wrap; padding-block: 0.6rem; gap: 0.3rem; }
-    .announcement-inner strong { display: block; }
-    .footer-links { grid-template-columns: 1fr; }
+    .announcement-inner { justify-content: space-between; text-align: left; flex-wrap: wrap; padding-block: 0.55rem; gap: 0.3rem 0.75rem; }
+    .footer-main { gap: 1.75rem; padding-block: 2.25rem 1.75rem; }
+    .footer-links { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 1rem; }
+    .footer-links a[href^="mailto:"] { grid-column: 1 / -1; }
     .footer-bottom { align-items: flex-start; flex-direction: column; }
   }
 </style>

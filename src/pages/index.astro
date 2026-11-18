@@ -9,18 +9,23 @@ import fallArchive from '../data/fall2026Archive.json';
   title="Home"
   description="Integrated Math runs free online tournaments and publishes resources for students interested in proof, modeling, and higher mathematics."
 >
-  <header class="home-intro">
+  <header class="home-intro page-intro">
     <div class="site-container intro-layout">
       <div>
         <p class="home-kicker">Integrated Mathematics</p>
-        <h1>Write proofs. Build models. Solve hard problems.</h1>
+        <h1>
+          <span>Write proofs.</span>
+          <span>Build models.</span>
+          <span>Solve hard problems.</span>
+        </h1>
         <p class="home-summary">Free online competitions in proof, modeling, and higher mathematics.</p>
         <div class="home-actions">
           <a class="button-primary" href="/competitions">View competitions</a>
           <a class="plain-link" href="/learn">Learning resources</a>
         </div>
       </div>
-      <div class="intro-note">
+      <div class="intro-note surface-panel">
+        <div class="intro-note-art" aria-hidden="true"></div>
         <strong>Student-led. Open worldwide.</strong>
         <p>Problems reward clear reasoning, not memorized steps.</p>
       </div>
@@ -88,7 +93,7 @@ import fallArchive from '../data/fall2026Archive.json';
         </section>
       </div>
 
-      <aside class="home-aside" aria-labelledby="updates-heading">
+      <aside class="home-aside surface-panel" aria-labelledby="updates-heading">
         <h2 id="updates-heading">Links</h2>
         <a href="/competitions/spring-2026">
           <span>Spring 2026 archive</span>
@@ -119,16 +124,36 @@ import fallArchive from '../data/fall2026Archive.json';
 </Layout>
 
 <style>
-  .home-intro { border-bottom: 1px solid var(--line); background: var(--paper); }
-  .intro-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.55fr); gap: clamp(3rem, 8vw, 7rem); align-items: end; padding-block: clamp(4.5rem, 8vw, 7rem); }
+  .home-intro { border-bottom: 1px solid var(--line); background-color: var(--paper); }
+  .intro-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.65fr); gap: clamp(2.5rem, 7vw, 6rem); align-items: center; padding-block: clamp(3.25rem, 7vw, 6.5rem); }
   .home-kicker { margin: 0 0 1rem; color: var(--green); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.11em; text-transform: uppercase; }
   .home-intro h1 { max-width: 780px; margin: 0; color: var(--ink); font-size: clamp(2.8rem, 5.8vw, 5rem); font-family: var(--font-serif); font-weight: 700; letter-spacing: -0.035em; line-height: 1.02; }
+  .home-intro h1 span { display: block; }
   .home-summary { max-width: 640px; margin: 1.5rem 0 0; color: var(--muted); font-size: clamp(1.05rem, 1.7vw, 1.22rem); line-height: 1.65; }
   .home-actions { display: flex; align-items: center; gap: 1.25rem; margin-top: 2rem; }
   .plain-link { color: var(--green); font-size: 0.87rem; font-weight: 700; text-decoration-thickness: 1px; }
-  .intro-note { border-top: 3px solid var(--green); padding-top: 1.1rem; }
-  .intro-note strong { font-size: 0.9rem; }
-  .intro-note p { margin: 0.65rem 0 0; color: var(--muted); font-size: 0.84rem; line-height: 1.6; }
+  .intro-note { padding: clamp(1rem, 2.5vw, 1.5rem); }
+  .intro-note-art {
+    display: grid;
+    place-items: center;
+    min-height: 8.5rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    background-color: var(--wash);
+    background-image: linear-gradient(rgb(55 99 71 / 9%) 1px, transparent 1px), linear-gradient(90deg, rgb(55 99 71 / 9%) 1px, transparent 1px);
+    background-size: 1.25rem 1.25rem;
+    background-position: center;
+  }
+  .intro-note-art::before {
+    content: '';
+    width: min(8rem, 55%);
+    aspect-ratio: 2;
+    background-color: var(--green);
+    mask: url('/bridge-mark.webp') center / contain no-repeat;
+  }
+  .intro-note strong { font-size: 1rem; }
+  .intro-note p { margin: 0.45rem 0 0; color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
 
   .next-tournament { background: var(--ink); color: white; }
   .tournament-layout { display: grid; grid-template-columns: 0.7fr 1.4fr 0.7fr; gap: 2.5rem; align-items: center; padding-block: 1.8rem; }
@@ -137,7 +162,7 @@ import fallArchive from '../data/fall2026Archive.json';
   .tournament-layout dl { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; }
   .tournament-layout dl div { border-left: 1px solid #36445c; padding-left: 1rem; }
   .tournament-layout dt { color: #aab4c2; font-size: 0.68rem; text-transform: uppercase; }
-  .tournament-layout dd { margin: 0.3rem 0 0; font-size: 0.82rem; font-weight: 700; }
+  .tournament-layout dd { margin: 0.25rem 0 0; font-size: clamp(1.1rem, 2.4vw, 1.65rem); font-weight: 750; letter-spacing: -0.02em; line-height: 1.1; }
   .tournament-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.45rem; }
   .tournament-actions a { color: white; font-size: 0.78rem; font-weight: 700; }
 
@@ -158,9 +183,10 @@ import fallArchive from '../data/fall2026Archive.json';
   .resource-links span { font-size: 0.9rem; font-weight: 700; }
   .resource-links small { color: var(--muted); font-size: 0.8rem; line-height: 1.5; }
 
-  .home-aside { align-self: start; border-top: 3px solid var(--ink); }
-  .home-aside h2 { margin: 0; border-bottom: 1px solid var(--line); padding: 1rem 0; }
-  .home-aside a { display: block; border-bottom: 1px solid var(--line); padding: 1rem 0; color: var(--ink); text-decoration: none; }
+  .home-aside { align-self: start; padding-inline: 1.25rem; }
+  .home-aside h2 { margin: 0; border-bottom: 1px solid var(--line); padding: 1.1rem 0; }
+  .home-aside a { display: block; padding: 1rem 0; color: var(--ink); text-decoration: none; }
+  .home-aside a + a { border-top: 1px solid var(--line); }
   .home-aside a:hover span { color: var(--green); text-decoration: underline; }
   .home-aside span { display: block; font-size: 0.85rem; font-weight: 700; }
   .home-aside small { display: block; margin-top: 0.3rem; color: var(--muted); font-size: 0.74rem; line-height: 1.5; }
@@ -183,9 +209,12 @@ import fallArchive from '../data/fall2026Archive.json';
   }
 
   @media (max-width: 620px) {
+    .intro-layout { gap: 1.75rem; }
+    .home-intro h1 { font-size: clamp(2.25rem, 8.8vw, 2.8rem); }
+    .intro-note-art { display: none; }
     .home-actions { align-items: stretch; flex-direction: column; }
     .home-actions .plain-link { padding-block: 0.4rem; text-align: center; }
-    .tournament-layout dl, .record dl { grid-template-columns: 1fr; gap: 0.8rem; }
+    .tournament-layout dl, .record dl { gap: 0.65rem; }
     .tournament-layout dl div, .record dl div { border-left: 0; border-top: 1px solid var(--line); padding: 0.7rem 0 0; }
     .tournament-layout dl div { border-color: #36445c; }
     .format-list > div, .resource-links a { grid-template-columns: 1fr; gap: 0.35rem; }

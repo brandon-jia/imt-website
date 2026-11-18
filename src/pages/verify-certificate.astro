@@ -39,20 +39,31 @@ const errors = {
   'not-found': 'No certificate matched that code. Check the code on the certificate and try again.',
   unavailable: 'Certificate verification is temporarily unavailable. Please try again later.',
 };
+const fieldError = result?.status === 'invalid' || result?.status === 'not-found';
 ---
 
 <Layout title="Verify a Certificate" description="Verify a certificate issued by the Integrated Math Tournament." noindex>
-  <section class="verification-section section">
+  <section class="verification-section page-intro section">
     <div class="site-container verification-grid">
       <div>
+        <p class="eyebrow">Fall 2026 Integrated Math Tournament</p>
         <h1 class="page-title">Verify a certificate</h1>
-        <p class="lede">Enter the code printed on your Fall 2026 Integrated Math Tournament certificate.</p>
+        <p class="lede">Confirm the recipient, award, and issue date on an IMT certificate.</p>
       </div>
 
-      <div class="verification-panel">
+      <div class="verification-panel surface-panel">
         <form action="/verify-certificate" method="post" autocomplete="off">
-          <label for="certificate-code">Certificate code</label>
-          <input class="form-control" id="certificate-code" name="code" type="text" required maxlength="32" autocapitalize="characters" spellcheck="false" />
+          <div class="code-field">
+            <label for="certificate-code">Certificate code</label>
+            <p id="code-hint">Use the 12 characters printed on the certificate.</p>
+            <input
+              class="form-control"
+              id="certificate-code" name="code" type="text" required maxlength="32"
+              autocapitalize="characters" spellcheck="false"
+              aria-describedby={fieldError ? 'code-hint verification-error' : 'code-hint'}
+              aria-invalid={fieldError ? 'true' : undefined}
+            />
+          </div>
           <button class="button-primary" type="submit">Verify certificate</button>
         </form>
 
@@ -66,24 +77,29 @@ const errors = {
             </dl>
           </section>
         )}
-        {result && result.status !== 'verified' && <p class="verification-error" role="status">{errors[result.status]}</p>}
+        {result && result.status !== 'verified' && <p id="verification-error" class="verification-error" role="status">{errors[result.status]}</p>}
       </div>
     </div>
   </section>
 </Layout>
 
 <style>
-  .verification-section { background: var(--paper); border-bottom: 1px solid var(--line); }
-  .verification-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr); gap: clamp(2rem, 8vw, 7rem); align-items: start; }
-  .verification-panel { background: var(--white); border: 1px solid var(--line); border-top: 3px solid var(--green); padding: clamp(1.2rem, 3vw, 2rem); }
-  form { display: grid; gap: 0.75rem; }
-  label, dt { font-size: 0.78rem; font-weight: 750; }
-  input { font-family: ui-monospace, monospace; letter-spacing: 0.08em; }
-  .verification-result { border-top: 1px solid var(--line); margin-top: 1.5rem; padding-top: 1.25rem; }
-  .verification-result h2 { margin: 0; color: var(--green); font-size: 1.1rem; font-weight: 750; }
-  dl { display: grid; gap: 0.75rem; margin: 1rem 0 0; }
-  dt { color: var(--muted); }
-  dd { margin: 0.15rem 0 0; overflow-wrap: anywhere; }
-  .verification-error { margin: 1rem 0 0; color: #8b2c23; }
+  .verification-section { background-color: var(--paper); }
+  .verification-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr); gap: clamp(2rem, 8vw, 7rem); align-items: start; }
+  .verification-panel { padding: clamp(1.2rem, 3vw, 2rem); }
+  form { display: grid; gap: 1rem; }
+  label { font-weight: 750; }
+  .code-field p { margin: 0.35rem 0 0.7rem; color: var(--muted); font-size: 0.86rem; }
+  input { font-family: ui-monospace, monospace; letter-spacing: 0.1em; }
+  input[aria-invalid="true"] { border-color: #8b2c23; }
+  .verification-result { margin-top: 1.5rem; padding: 1rem 1.2rem; border: 1px solid var(--line); border-radius: var(--radius-control); background-color: var(--wash); }
+  .verification-result h2 { margin: 0; color: var(--green); font-size: 1.12rem; font-weight: 750; }
+  dl { margin: 0.85rem 0 0; }
+  dl > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.8fr); gap: 0.75rem; border-top: 1px solid var(--line); padding-block: 0.6rem; align-items: baseline; }
+  dl > div:last-child { padding-bottom: 0; }
+  dt { color: var(--muted); font-size: 0.8rem; font-weight: 700; }
+  dd { margin: 0; font-size: 0.9rem; overflow-wrap: anywhere; }
+  .verification-error { margin: 1rem 0 0; padding: 0.75rem 0.9rem; border: 1px solid #d7aaa5; border-radius: var(--radius-control); background: #fff1ef; color: #8b2c23; font-size: 0.88rem; }
   @media (max-width: 760px) { .verification-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 390px) { dl > div { grid-template-columns: 1fr; gap: 0.2rem; } }
 </style>

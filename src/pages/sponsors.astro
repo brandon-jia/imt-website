@@ -11,7 +11,7 @@ const sponsors = [
 ---
 
 <Layout title="Sponsors" description="Sponsors of the Integrated Mathematics Tournament.">
-  <header class="sponsor-header">
+  <header class="sponsor-header page-intro">
     <div class="site-container">
       <h1>Sponsors</h1>
       <p>These organizations fund IMT competitions, prizes, and learning materials.</p>
@@ -27,7 +27,7 @@ const sponsors = [
 
       <div class="sponsor-wall">
         {sponsors.map(sponsor => (
-          <a href={sponsor.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${sponsor.name}`}>
+          <a class="surface-panel" href={sponsor.url} target="_blank" rel="noopener noreferrer" aria-label={`Visit ${sponsor.name}`}>
             <img src={sponsor.logo} alt={sponsor.name} loading="lazy" decoding="async" width="300" height="132" />
           </a>
         ))}
@@ -45,7 +45,7 @@ const sponsors = [
 </Layout>
 
 <style>
-  .sponsor-header { border-bottom: 1px solid var(--line); background: var(--paper); }
+  .sponsor-header { border-bottom: 1px solid var(--line); background-color: var(--paper); }
   .sponsor-header .site-container { padding-block: clamp(3.5rem, 7vw, 5.5rem); }
   .sponsor-header h1 { max-width: 760px; margin: 0; color: var(--ink); font-size: clamp(2.35rem, 4.5vw, 4rem); font-weight: 750; letter-spacing: -0.035em; }
   .sponsor-header p { max-width: 620px; margin: 1rem 0 0; color: var(--muted); font-size: 1rem; line-height: 1.65; }
@@ -55,22 +55,20 @@ const sponsors = [
   .sponsor-list-heading h2, .sponsor-contact h2 { margin: 0; color: var(--ink); font-size: 1.2rem; font-weight: 750; letter-spacing: -0.015em; }
   .sponsor-list-heading p { margin: 0; color: var(--muted); font-size: 0.74rem; }
 
-  .sponsor-wall { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: stretch; border-block: 1px solid var(--line); }
-  .sponsor-wall a { display: flex; min-width: 0; height: 150px; align-items: center; justify-content: center; border-right: 1px solid var(--line); padding: 1.5rem; }
-  .sponsor-wall a:first-child { border-left: 1px solid var(--line); }
+  .sponsor-wall { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.75rem; align-items: stretch; }
+  .sponsor-wall a { display: flex; min-width: 0; min-height: 140px; align-items: center; justify-content: center; padding: 1rem; transition: border-color 150ms ease; }
+  .sponsor-wall a:hover { border-color: var(--green); }
   .sponsor-wall img { max-width: 150px; max-height: 66px; width: 100%; height: 66px; object-fit: contain; }
 
   .sponsor-contact { display: flex; align-items: center; justify-content: space-between; gap: 3rem; margin-top: 3rem; border-top: 1px solid var(--line); padding-top: 2rem; }
   .sponsor-contact p { max-width: 600px; margin: 0.55rem 0 0; color: var(--muted); font-size: 0.86rem; line-height: 1.6; }
 
   @media (max-width: 850px) {
-    .sponsor-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); border-left: 1px solid var(--line); border-bottom: 0; }
-    .sponsor-wall a, .sponsor-wall a:first-child { border-left: 0; border-bottom: 1px solid var(--line); }
+    .sponsor-wall { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
   @media (max-width: 560px) {
     .sponsor-list-heading, .sponsor-contact { align-items: flex-start; flex-direction: column; }
-    .sponsor-wall { grid-template-columns: 1fr; }
-    .sponsor-wall a { height: 125px; }
+    .sponsor-wall a { min-height: 105px; }
   }
 </style>

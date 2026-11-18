@@ -3,7 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 ---
 
 <Layout title="Learning Hub" description="Free competition-math diagnostics, problems, solutions, and handouts from Integrated Math.">
-  <header class="learn-header">
+  <header class="learn-header page-intro">
     <div class="site-container learn-header-grid">
       <div>
         <p class="eyebrow">Learning hub</p>
@@ -25,7 +25,7 @@ import Layout from '../../layouts/Layout.astro';
         </div>
       </div>
 
-      <dl>
+      <dl class="surface-panel">
         <div><dt>4</dt><dd>subjects</dd></div>
         <div><dt>43</dt><dd>skills mapped</dd></div>
         <div><dt>15–25</dt><dd>questions</dd></div>
@@ -65,14 +65,16 @@ import Layout from '../../layouts/Layout.astro';
 </Layout>
 
 <style>
-  .learn-header { border-bottom: 1px solid var(--line); background: var(--paper); }
+  .learn-header { border-bottom: 1px solid var(--line); background-color: var(--paper); }
   .learn-header-grid { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 4rem; align-items: end; padding-block: clamp(3.75rem, 7vw, 6rem); }
   .learn-header-grid .lede { margin: 0; }
   .diagnostic-section { background: white; }
   .diagnostic-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: clamp(3rem, 9vw, 8rem); align-items: center; }
   .diagnostic-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.2rem; margin-top: 2rem; }
-  .diagnostic-grid dl { display: grid; grid-template-columns: repeat(2, 1fr); margin: 0; border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
-  .diagnostic-grid dl div { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 1.35rem; }
+  .diagnostic-grid dl { display: grid; grid-template-columns: repeat(2, 1fr); margin: 0; background-color: var(--wash); }
+  .diagnostic-grid dl div { padding: 1.35rem; }
+  .diagnostic-grid dl div:nth-child(odd) { border-right: 1px solid var(--line); }
+  .diagnostic-grid dl div:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
   .diagnostic-grid dt { font-family: var(--font-sans); font-size: 2rem; font-weight: 750; letter-spacing: -0.04em; }
   .diagnostic-grid dd { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.75rem; }
   .archive-section { border-block: 1px solid var(--line); background: var(--paper); }

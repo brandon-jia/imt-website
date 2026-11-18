@@ -8,7 +8,7 @@ import fallArchive from '../../data/fall2026Archive.json';
   title="Competitions"
   description="Dates, formats, registration, results, and archives for the Integrated Mathematics Tournament."
 >
-  <header class="competition-header">
+  <header class="competition-header page-intro">
     <div class="site-container header-grid">
       <div>
         <p class="eyebrow">Competitions</p>
@@ -51,7 +51,7 @@ import fallArchive from '../../data/fall2026Archive.json';
       </div>
 
       <div class="tournament-list">
-        <article class="tournament-row">
+        <article class="tournament-row surface-panel">
           <div>
             <span class="status past">Concluded</span>
             <h3>Fall 2026</h3>
@@ -68,7 +68,7 @@ import fallArchive from '../../data/fall2026Archive.json';
           </div>
         </article>
 
-        <article class="tournament-row">
+        <article class="tournament-row surface-panel">
           <div>
             <span class="status past">Concluded</span>
             <h3>Spring 2026</h3>
@@ -91,7 +91,7 @@ import fallArchive from '../../data/fall2026Archive.json';
 <style>
   .competition-header {
     border-bottom: 1px solid var(--line);
-    background: var(--paper);
+    background-color: var(--paper);
   }
 
   .header-grid {
@@ -114,14 +114,13 @@ import fallArchive from '../../data/fall2026Archive.json';
 
   .tournament-section { background: var(--paper); }
   .section-heading { margin-bottom: 2rem; }
-  .tournament-list { border-top: 1px solid var(--line); }
+  .tournament-list { display: grid; gap: 1rem; }
   .tournament-row {
     display: grid;
-    grid-template-columns: minmax(210px, 0.8fr) minmax(340px, 1.4fr) minmax(160px, 0.6fr);
-    gap: 3rem;
+    grid-template-columns: minmax(160px, 0.8fr) minmax(270px, 1.4fr) minmax(140px, 0.65fr);
+    gap: clamp(1rem, 3vw, 3rem);
     align-items: center;
-    border-bottom: 1px solid var(--line);
-    padding-block: 2rem;
+    padding: clamp(1.1rem, 3vw, 2rem);
   }
   .tournament-row.current { border-top: 3px solid var(--green); }
   .status { color: var(--green); font-size: 0.7rem; font-weight: 800; letter-spacing: 0.09em; text-transform: uppercase; }
@@ -131,7 +130,7 @@ import fallArchive from '../../data/fall2026Archive.json';
   .tournament-row dl { display: grid; grid-template-columns: repeat(3, 1fr); margin: 0; }
   .tournament-row dl div { border-left: 1px solid var(--line); padding-left: 1rem; }
   .tournament-row dt { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; }
-  .tournament-row dd { margin: 0.35rem 0 0; font-size: 0.86rem; font-weight: 700; }
+  .tournament-row dd { margin: 0.3rem 0 0; font-size: 1.25rem; font-weight: 750; }
   .row-actions { display: flex; flex-direction: column; align-items: stretch; gap: 0.8rem; text-align: center; }
 
   @media (max-width: 900px) {
@@ -145,7 +144,7 @@ import fallArchive from '../../data/fall2026Archive.json';
     .format-points { grid-template-columns: 1fr; }
     .format-points article,
     .format-points article + article { border-right: 0; border-bottom: 1px solid var(--line); padding: 1.2rem 0; }
-    .tournament-row dl { grid-template-columns: 1fr; gap: 0.8rem; }
+    .tournament-row dl { gap: 0.65rem; }
     .tournament-row dl div { border-left: 0; border-top: 1px solid var(--line); padding: 0.8rem 0 0; }
   }
 </style>

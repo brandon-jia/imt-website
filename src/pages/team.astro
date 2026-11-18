@@ -10,7 +10,7 @@ const teamMembers = [
 ---
 
 <Layout title="Team & Contact" description="Meet the student team behind Integrated Math and contact us about competitions, resources, or sponsorship.">
-  <header class="team-header">
+  <header class="team-header page-intro">
     <div class="site-container team-header-grid">
       <div>
         <p class="eyebrow">About IMT</p>
@@ -46,7 +46,7 @@ const teamMembers = [
         <p class="lede">Ask about the tournament, registration, resources, or sponsorship. We usually reply within two days.</p>
       </div>
 
-      <form id="contact-form" action="https://formspree.io/f/xojzalge" method="POST">
+      <form class="surface-panel" id="contact-form" action="https://formspree.io/f/xojzalge" method="POST">
         <input type="hidden" name="subject" value="New IMT Contact Inquiry" />
         <label for="name">Name or organization (optional)</label>
         <input class="form-control" type="text" id="name" name="name" autocomplete="name" />
@@ -71,7 +71,7 @@ const teamMembers = [
 </script>
 
 <style>
-  .team-header { border-bottom: 1px solid var(--line); background: var(--paper); }
+  .team-header { border-bottom: 1px solid var(--line); background-color: var(--paper); }
   .team-header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: end; padding-block: clamp(3.75rem, 7vw, 6rem); }
   .team-header-grid .lede { margin: 0; }
   .team-section { background: white; }
@@ -82,7 +82,7 @@ const teamMembers = [
   .team-list article > p { max-width: 600px; margin: 0; color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
   .contact-section { border-top: 1px solid var(--line); background: var(--paper); }
   .contact-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: clamp(3rem, 8vw, 7rem); align-items: start; }
-  .contact-grid form { display: grid; gap: 0.55rem; }
+  .contact-grid form { display: grid; gap: 0.55rem; padding: clamp(1.1rem, 3vw, 2rem); }
   .contact-grid label { margin-top: 0.65rem; font-size: 0.75rem; font-weight: 750; text-transform: uppercase; }
   .contact-grid button { justify-self: start; margin-top: 0.8rem; }
   .form-status { margin-top: 0.6rem; padding: 0.8rem; border: 1px solid var(--line); font-size: 0.85rem; }

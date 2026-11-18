@@ -19,6 +19,10 @@
   --white: #ffffff;
   --line: #d8d9d3;
   --soft-line: #e7e5de;
+  --wash: #edf2ec;
+  --radius-control: 0.45rem;
+  --radius-panel: 0.75rem;
+  --shadow-panel: 0 3px 8px rgb(32 61 50 / 4%), 0 12px 30px rgb(32 61 50 / 5%);
   --max-width: 1180px;
 }
 
@@ -74,8 +78,19 @@ a { text-underline-offset: 0.18em; }
 p { text-wrap: pretty; }
 
 .site-container {
-  width: min(calc(100% - 2rem), var(--max-width));
+  width: min(calc(100% - clamp(2rem, 6vw, 4rem)), var(--max-width));
   margin-inline: auto;
+}
+
+.page-intro {
+  background-image: radial-gradient(ellipse at 90% 15%, rgb(55 99 71 / 8%), transparent 62%);
+}
+
+.surface-panel {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
+  background-color: var(--white);
+  box-shadow: var(--shadow-panel);
 }
 
 .section {
@@ -137,12 +152,12 @@ p { text-wrap: pretty; }
   min-height: 2.9rem;
   padding: 0.75rem 1.15rem;
   border: 1px solid transparent;
-  border-radius: 0.2rem;
+  border-radius: var(--radius-control);
   font-size: 0.9rem;
   font-weight: 750;
   line-height: 1;
   text-decoration: none;
-  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, translate 150ms ease;
 }
 
 .button-primary {
@@ -154,11 +169,11 @@ p { text-wrap: pretty; }
 
 .button-secondary {
   border-color: #aeb6b1;
-  background: transparent;
+  background-color: var(--white);
   color: var(--ink);
 }
 
-.button-secondary:hover { border-color: var(--ink); }
+.button-secondary:hover { border-color: var(--green); background-color: var(--wash); }
 
 .text-link {
   min-height: auto;
@@ -182,7 +197,7 @@ p { text-wrap: pretty; }
 .form-control {
   width: 100%;
   border: 1px solid #bfc6c1;
-  border-radius: 0.2rem;
+  border-radius: var(--radius-control);
   background: var(--white);
   padding: 0.8rem 0.9rem;
   color: var(--ink);
@@ -211,7 +226,7 @@ p { text-wrap: pretty; }
 
 .rounded-lg,
 .rounded-xl,
-.rounded-2xl { border-radius: 0.3rem; }
+.rounded-2xl { border-radius: var(--radius-panel); }
 
 .shadow-sm,
 .shadow-md,
@@ -226,7 +241,7 @@ p { text-wrap: pretty; }
 .bg-brand-dark.text-brand-gold, .bg-brand-dark .text-brand-gold { color: var(--gold); }
 :where(.bg-brand-dark, .site-footer, .next-tournament) :is(.text-slate-500, .text-slate-400, .text-slate-300, .text-brand-green) { color: #d0dad3; }
 :where(.bg-brand-dark) :is(.bg-white, .bg-brand-light) :is(.text-slate-400, .text-slate-500, .text-slate-300) { color: #59665f; }
-[data-section="competition-detail"] > section:first-of-type { background: var(--paper); color: var(--ink); border-bottom: 1px solid var(--line); }
+[data-section="competition-detail"] > section:first-of-type { background-color: var(--paper); color: var(--ink); border-bottom: 1px solid var(--line); }
 [data-section="competition-detail"] > section:first-of-type :is(.text-slate-400, .text-slate-500, .text-white\/65, .text-white, .text-brand-green) { color: var(--muted); }
 [data-section="competition-detail"] > section:first-of-type h1 span { color: var(--ink); font-weight: inherit; font-style: normal; }
 [data-section="competition-detail"] > section:first-of-type .rounded-full { background: transparent; padding-inline: 0; }
@@ -246,8 +261,27 @@ p { text-wrap: pretty; }
 }
 
 @media (max-width: 700px) {
-  .site-container { width: min(calc(100% - 1.25rem), var(--max-width)); }
   .display-title { font-size: clamp(2.55rem, 12vw, 3.8rem); }
+}
+
+@keyframes settle-in {
+  from { opacity: 0.85; translate: 0 6px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .page-intro > div {
+    animation: settle-in 360ms ease-out;
+  }
+
+  .mobile-nav:not([hidden]) > .site-container {
+    animation: settle-in 180ms ease-out;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  :is(.button-primary, .button-secondary):hover:not(:disabled) { translate: 0 -2px; }
+  :is(.button-primary, .button-secondary):active:not(:disabled) { translate: 0 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

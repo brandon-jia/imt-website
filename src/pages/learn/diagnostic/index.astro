@@ -39,7 +39,7 @@ const diagnosticAvailable = Boolean(import.meta.env.SUPABASE_SERVICE_ROLE_KEY &&
           </div>
         </div>
 
-        <form method="POST" action="/api/diagnostic/start" class="bg-white text-brand-dark border border-gray-200 rounded-lg p-6 md:p-7 shadow-xl shadow-black/10">
+        <form method="POST" action="/api/diagnostic/start" class="surface-panel text-brand-dark p-6 md:p-7">
           <fieldset><legend class="block text-sm font-bold text-brand-dark mb-4">
             Highest contest experience
           </legend>
@@ -70,7 +70,7 @@ const diagnosticAvailable = Boolean(import.meta.env.SUPABASE_SERVICE_ROLE_KEY &&
           <button type="submit" disabled={!diagnosticAvailable} class="w-full bg-brand-dark text-brand-gold font-bold py-3 px-5 rounded hover:bg-[#1e3152] transition-colors duration-150 btn-lift disabled:opacity-50">
             Begin Diagnostic
           </button>
-          <p class="text-xs text-slate-400 leading-relaxed mt-4">
+          <p class="privacy-note mt-4">
             No account required. A cookie lets this browser access your saved result.
           </p>
         </form>
